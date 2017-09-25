@@ -25,7 +25,7 @@ export default class Event extends Component {
     const { eventData } = this.state
     const { location = {} } = eventData
     return (
-      <div className="Waitlist">
+      <div className="Event">
         <h2>{eventData.name}</h2>
         <h3>{location.name}</h3>
         <p>{location.address}</p>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
+import AddPerson from '../modals/AddPerson'
 
 export default class Waitlist extends Component {
   constructor() {
@@ -29,8 +30,9 @@ export default class Waitlist extends Component {
         <h2>Waitlist</h2>
         {personIds.map(id => {
           const person = personData[id]
-          return (!person.car && <p key={id}>{`${person.name} -- ${person.location}`}</p>)
+          return (!person.car && <p key={id}>{`${person.name} -- ${person.city}`}</p>)
         })}
+        <AddPerson />
       </div>
     );
   }
