@@ -9,13 +9,10 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  text-align: left;
+  height: 50px;
   padding: 20px;
   color: white;
-}
-
-.App-intro {
-  font-size: large;
 }
 
 @keyframes App-logo-spin {

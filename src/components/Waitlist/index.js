@@ -18,7 +18,7 @@ export default class Waitlist extends Component {
         personData,
         personIds: Object.keys(personData)
       })
-      console.log(this.state)
+      console.log('Waitlist state', this.state)
     })
   }
 
@@ -29,7 +29,7 @@ export default class Waitlist extends Component {
         <h2>Waitlist</h2>
         {personIds.map(id => {
           const person = personData[id]
-          return (!person.car && <p key={id}>{`${person.name} -- Location: ${person.location}`}</p>)
+          return (!person.car && <p key={id}>{`${person.name} -- ${person.location}`}</p>)
         })}
       </div>
     );

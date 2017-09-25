@@ -32,14 +32,14 @@ export default class Cars extends Component {
         carData,
         carIds
       })
-      console.log(this.state)
+      console.log('Cars state', this.state)
     })
   }
 
   render() {
     const {carData, carIds } = this.state
     return (
-      <div className="Waitlist">
+      <div className="Cars">
         <h2>Cars</h2>
         {carIds.map(id => {
           const car = carData[id]

@@ -1,9 +1,15 @@
+.Cars {
+    
+}
+
 .car {
     background-color: antiquewhite;
     border: solid 1px black;
+    padding: 0 15px;
 }
 
 .image {
-    height: 40px;
-    width: 40px;
+    height: 80px;
+    width: 80px;
+    float: left;
 }
