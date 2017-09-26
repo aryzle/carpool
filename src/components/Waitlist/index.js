@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import AddPerson from '../modals/AddPerson'
+import './styles.css'
 
 export default class Waitlist extends Component {
   static propTypes = {

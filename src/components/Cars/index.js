@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import moment from 'moment'
 import { Icon } from 'semantic-ui-react'
-import AddCar from '../modals/AddCar'
 import { toArr } from '../../utils'
+import AddCar from '../modals/AddCar'
+import AddPerson from '../modals/AddPerson'
+import RiderInfo from '../RiderInfo'
 import carSmall from '../../static/car-small.svg'
 import './styles.css'
-import AddPerson from "../modals/AddPerson/index"
 
 export default class Cars extends Component {
   static propTypes = {
@@ -22,14 +23,14 @@ export default class Cars extends Component {
     const { eventId } = this.props
     const eventRef = firebase.database().ref().child('events').child(eventId)
     const carRef = eventRef.child('cars')
-    const personRef = eventRef.child('persons')
+    const personsRef = eventRef.child('persons')
 
     carRef.on('value', snap => {
       const carData = snap.val()
       const carIds = Object.keys(carData)
       carIds.map(id => {
         const car = carData[id]
-        return personRef.child(car.driver).on('value', snap => {
+        return personsRef.child(car.driver).on('value', snap => {
           carData[id] = {
             ...carData[id],
             driver: snap.val()
@@ -44,7 +45,7 @@ export default class Cars extends Component {
     })
   }
 
-  renderRiders({ id, riders = {}, seats }) {
+  renderRiderIcons({ id, riders = {}, seats }) {
     const { eventId } = this.props
     const ridersArr = toArr(Object.keys(riders), riders)
     const seatsLeft = seats - ridersArr.length
@@ -70,12 +71,19 @@ export default class Cars extends Component {
         <h2>Cars</h2>
         {carIds.map(id => {
           const car = carData[id]
+          const { riders = {} } = car
           return (
             <div key={id} className="car">
-              <img className="image" src={carSmall} alt="small car" />
-              <p>{`driver: ${car.driver.name}`} -- {`${car.seats} seats`}</p>
-              <p>{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
-              {this.renderRiders(car)}
+              <img className="car-image" src={carSmall} alt="small car" />
+              <div className="car-center">
+                <p>{`driver: ${car.driver.name}`} -- {`${car.seats} seats`}</p>
+                <p>{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
+                {this.renderRiderIcons(car)}
+              </div>
+              <div className="car-right">
+                <p>Passengers</p>
+                {Object.keys(riders).map(riderId => <RiderInfo riderId={riderId} eventId={eventId} />)}
+              </div>
             </div>
           )
         })}

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import moment from 'moment'
+import './styles.css'
 
 export default class EventInfo extends Component {
   static propTypes = {

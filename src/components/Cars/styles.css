@@ -1,15 +1,23 @@
 .Cars {
-    
+    padding: 15px;
 }
 
 .car {
     background-color: antiquewhite;
     border: solid 1px black;
-    padding: 0 15px;
+    padding: 5px 15px;
 }
 
-.image {
+.car-image {
     height: 80px;
     width: 80px;
     float: left;
+}
+
+.car-center {
+    display: inline-block;
+}
+
+.car-right {
+    float: right;
 }
