@@ -21,7 +21,7 @@ export default class Cars extends Component {
       const carIds = Object.keys(carData)
       carIds.map(id => {
         const car = carData[id]
-        personRef.child(car.driver).on('value', snap => {
+        return personRef.child(car.driver).on('value', snap => {
           carData[id] = {
             ...carData[id],
             driver: snap.val()
