@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
+import moment from 'moment'
+import AddCar from '../modals/AddCar'
 import carSmall from '../../static/car-small.svg'
 import './styles.css'
 
@@ -39,6 +41,7 @@ export default class Cars extends Component {
   }
 
   render() {
+    const { eventId } = this.props
     const {carData, carIds } = this.state
     return (
       <div className="Cars">
@@ -49,10 +52,11 @@ export default class Cars extends Component {
             <div key={id} className="car">
               <img className="image" src={carSmall} alt="small car" />
               <p>{`driver: ${car.driver.name}`} -- {`${car.seats} seats`}</p>
-              <p>{`Departure: ${new Date(car.departureTime)}`}</p>
+              <p>{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
             </div>
           )
         })}
+        <AddCar eventId={eventId} />
       </div>
     );
   }
