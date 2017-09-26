@@ -7,7 +7,9 @@ import { stateOptions } from '../shared'
 
 export default class AddPerson extends Component {
   static propTypes = {
-    eventId: PropTypes.string
+    eventId: PropTypes.string,
+    trigger: PropTypes.element,
+    carId: PropTypes.string
   }
 
   state = {
@@ -26,15 +28,21 @@ export default class AddPerson extends Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
-    const { eventId } = this.props
-    const newId = uuid()
-    firebase.database().ref(`events/${eventId}/persons/${newId}`).set(
-      {
-        ...this.state,
-        id: newId
+    const { eventId, carId } = this.props
+    const newPersonId = uuid()
+    firebase.database().ref(`events/${eventId}/persons/${newPersonId}`).set({
+      ...this.state,
+      id: newPersonId,
+      car: carId || null
+    })
+    .then(() => {
+      if (carId) {
+        return firebase.database().ref(`events/${eventId}/cars/${carId}/riders`).update({
+          [newPersonId]: true
+        })
       }
-    )
-    .then(this.setState({ success: true }))
+    })
+    .then(() => this.setState({ success: true }))
     .catch(e => {
       console.log(e)
       this.setState({ error: true })
@@ -42,9 +50,10 @@ export default class AddPerson extends Component {
   }
 
   render() {
+    const { trigger } = this.props
     const { name, email, phone, city, address, state, info, success, error } = this.state
     return (
-      <Modal trigger={<Button>Need a ride?</Button>}>
+      <Modal trigger={trigger || <Button>Need a ride?</Button>}>
         <Modal.Header>Join Waitlist</Modal.Header>
         <Modal.Content form>
           <Form onSubmit={this.handleSubmit} size="small" success={success} error={error}>
