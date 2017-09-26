@@ -1,30 +1,34 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import { Button, Form, Message, Modal } from 'semantic-ui-react'
 import uuid from 'uuid/v4'
 import { stateOptions } from '../shared'
 
 export default class AddPerson extends Component {
-  constructor() {
-    super()
-    this.state = {
-      name: '',
-      email: '',
-      phone: '',
-      city: '',
-      address: '',
-      state: '',
-      info: '',
-      success: false,
-      error: false
-    }
+  static propTypes = {
+    eventId: PropTypes.string
   }
+
+  state = {
+    name: '',
+    email: '',
+    phone: '',
+    city: '',
+    address: '',
+    state: '',
+    info: '',
+    success: false,
+    error: false
+  }
+
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
+    const { eventId } = this.props
     const newId = uuid()
-    firebase.database().ref(`events/f04bdaed-7414-48a5-a96f-0f1f2bb0ff5b/persons/${newId}`).set(
+    firebase.database().ref(`events/${eventId}/persons/${newId}`).set(
       {
         ...this.state,
         id: newId

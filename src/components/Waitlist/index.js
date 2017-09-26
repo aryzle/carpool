@@ -1,18 +1,20 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import AddPerson from '../modals/AddPerson'
 
 export default class Waitlist extends Component {
-  constructor() {
-    super()
-    this.state = {
-      personData: {},
-      personIds: []
-    }
+  static propTypes = {
+    eventId: PropTypes.string
+  }
+  state = {
+    personData: {},
+    personIds: []
   }
 
   componentDidMount() {
-    const personRef = firebase.database().ref().child('events').child('f04bdaed-7414-48a5-a96f-0f1f2bb0ff5b').child('persons')
+    const { eventId } = this.props
+    const personRef = firebase.database().ref().child('events').child(eventId).child('persons')
     personRef.on('value', snap => {
       const personData = snap.val()
       this.setState({
@@ -24,6 +26,7 @@ export default class Waitlist extends Component {
   }
 
   render() {
+    const { eventId } = this.props
     const {personData, personIds } = this.state
     return (
       <div className="Waitlist">
@@ -32,7 +35,7 @@ export default class Waitlist extends Component {
           const person = personData[id]
           return (!person.car && <p key={id}>{`${person.name} -- ${person.city}`}</p>)
         })}
-        <AddPerson />
+        <AddPerson eventId={eventId} />
       </div>
     );
   }

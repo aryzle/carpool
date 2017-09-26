@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import moment from 'moment'
 
-export default class Event extends Component {
+export default class EventInfo extends Component {
+  static propTypes = {
+    eventId: PropTypes.string
+  }
+
   constructor() {
     super()
     this.state = {
@@ -11,7 +16,8 @@ export default class Event extends Component {
   }
 
   componentDidMount() {
-    const eventRef = firebase.database().ref().child('events').child('f04bdaed-7414-48a5-a96f-0f1f2bb0ff5b')
+    const { eventId } = this.props
+    const eventRef = firebase.database().ref().child('events').child(eventId)
     eventRef.on('value', snap => {
       const eventData = snap.val()
       this.setState({
@@ -25,7 +31,7 @@ export default class Event extends Component {
     const { eventData } = this.state
     const { location = {} } = eventData
     return (
-      <div className="Event">
+      <div className="EventInfo">
         <h2>{eventData.name}</h2>
         <h3>{location.name}</h3>
         <p>{location.address}</p>

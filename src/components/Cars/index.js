@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import carSmall from '../../static/car-small.svg'
 import './styles.css'
 
 export default class Cars extends Component {
-  constructor() {
-    super()
-    this.state = {
-      carData: {},
-      carIds: []
-    }
+  static propTypes = {
+    eventId: PropTypes.string
+  }
+  state = {
+    carData: {},
+    carIds: []
   }
 
   componentDidMount() {
-    const eventRef = firebase.database().ref().child('events').child('f04bdaed-7414-48a5-a96f-0f1f2bb0ff5b')
+    const { eventId } = this.props
+    const eventRef = firebase.database().ref().child('events').child(eventId)
     const carRef = eventRef.child('cars')
     const personRef = eventRef.child('persons')
     carRef.on('value', snap => {
