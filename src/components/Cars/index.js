@@ -52,12 +52,12 @@ export default class Cars extends Component {
     let emptySeats = []
 
     for(let i=0; i<seatsLeft; i++) {
-      emptySeats.push(<AddPerson eventId={eventId} trigger={<Icon name="add user"/>} carId={id} />)
+      emptySeats.push(<AddPerson eventId={eventId} trigger={<Icon link size="big" name="add user"/>} carId={id} />)
     }
 
     return (
       <div className="riders">
-        {ridersArr.map(rider => <Icon name="user"/>)}
+        {ridersArr.map(rider => <Icon link size="large" name="user"/>)}
         {emptySeats}
       </div>
     )
@@ -73,7 +73,7 @@ export default class Cars extends Component {
           const car = carData[id]
           const { riders = {} } = car
           return (
-            <div key={id} className="car">
+            <div key={id} className="car-row">
               <img className="car-image" src={carSmall} alt="small car" />
               <div className="car-center">
                 <p>{`driver: ${car.driver.name}`} -- {`${car.seats} seats`}</p>

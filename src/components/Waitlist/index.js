@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import AddPerson from '../modals/AddPerson'
 import './styles.css'
+import RiderInfo from '../RiderInfo'
 
 export default class Waitlist extends Component {
   static propTypes = {
@@ -34,7 +35,7 @@ export default class Waitlist extends Component {
         <h2>Waitlist</h2>
         {personIds.map(id => {
           const person = personData[id]
-          return (!person.car && <p key={id}>{`${person.name} -- ${person.city}`}</p>)
+          return (!person.car && <RiderInfo key={id} riderId={id} eventId={eventId} />)
         })}
         <AddPerson eventId={eventId} />
       </div>

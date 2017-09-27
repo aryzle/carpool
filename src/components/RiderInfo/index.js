@@ -37,7 +37,7 @@ export default class RiderInfo extends Component {
       <div className="RiderInfo">
         <Label image>
           <img src={chrisJPG} />
-          {riderData.name}
+          {riderData.name} - {riderData.city}
         </Label>
       </div>
     );

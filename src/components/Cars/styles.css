@@ -2,7 +2,7 @@
     padding: 15px;
 }
 
-.car {
+.car-row {
     background-color: antiquewhite;
     border: solid 1px black;
     padding: 5px 15px;
@@ -20,4 +20,5 @@
 
 .car-right {
     float: right;
+    min-width: 150px;
 }
