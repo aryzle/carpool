@@ -22,6 +22,7 @@ export default class AddCar extends Component {
     city: '',
     state: '',
     departureDateTime: '',
+    label: '',
     info: '',
     success: false,
     error: false
@@ -30,11 +31,7 @@ export default class AddCar extends Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleDateChange = date => {
-    console.log(date)
-    console.log(date.valueOf())
-    this.setState({ departureDateTime: date })
-  }
+  handleDateChange = date => this.setState({ departureDateTime: date })
 
   handleSubmit = () => {
     const { eventId } = this.props
@@ -44,7 +41,7 @@ export default class AddCar extends Component {
     console.log(departureDateTime)
     firebase.database().ref(`events/${eventId}/persons/${newPersonId}`).set(
       {
-        ...omit(this.state, ['seats', 'departureDateTime']),
+        ...omit(this.state, ['seats', 'departureDateTime', 'success', 'error']),
         car: newCarId,
         id: newPersonId,
         driver: newPersonId
@@ -73,17 +70,18 @@ export default class AddCar extends Component {
         <Modal.Header>Add Car</Modal.Header>
         <Modal.Content form>
           <Form onSubmit={this.handleSubmit} size="small" success={success} error={error}>
-            <label>About you</label>
-            <Form.Input required placeholder="Name" name="name" value={name} onChange={this.handleChange} />
-            <Form.Input required placeholder="Email" name="email" value={email} onChange={this.handleChange} />
+            <Form.Input required placeholder="Name*" name="name" value={name} onChange={this.handleChange} />
+            <Form.Input required placeholder="Email*" name="email" value={email} onChange={this.handleChange} />
             <Form.Input placeholder="Phone" name="phone" value={phone} onChange={this.handleChange} />
-            <Form.Input required placeholder="City" name="city" value={city} onChange={this.handleChange} />
+            <Form.Input required placeholder="City*" name="city" value={city} onChange={this.handleChange} />
             <Form.Input placeholder="Address" name="address" value={address} onChange={this.handleChange} />
             <Form.Select placeholder="State" name="state" value={state} options={stateOptions} onChange={this.handleChange} />
-            <Form.TextArea placeholder="Please tell us if you have any constraints" name="info" value={info} onChange={this.handleChange} />
-            <label>About your car</label>
-            <Form.Select placeholder="Seats" name="seats" value={seats} options={seatOptions} onChange={this.handleChange} />
-            <DatePicker onChange={this.handleDateChange} selected={departureDateTime} showTimeSelect timeIntervals={15} dateFormat="LLL" />
+            <Form.TextArea placeholder="Is there anything more you'd like us to know?" name="info" value={info} onChange={this.handleChange} />
+            <Form.Select label="About your car" placeholder="Seats" name="seats" value={seats} options={seatOptions} onChange={this.handleChange} />
+            <Form.Field>
+              <label>If you need to leave at a certain time, when?</label>
+              <DatePicker onChange={this.handleDateChange} selected={departureDateTime} shouldCloseOnSelect={false} timeIntervals={15} dateFormat="LLL" showTimeSelect />
+            </Form.Field>
             <Button type="submit">Submit</Button>
             <Message
               success

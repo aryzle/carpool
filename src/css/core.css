@@ -1,0 +1,10 @@
+/*TODO: find better way than this for datepicker */
+.react-datepicker__time-list {
+    padding-left: 0;
+    padding-right: 0 !important;
+}
+
+.react-datepicker__time-list-item {
+    padding-right: 5px !important;
+    padding-left: 5px !important;
+}
