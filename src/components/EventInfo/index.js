@@ -23,8 +23,7 @@ export default class EventInfo extends Component {
       const eventData = snap.val()
       this.setState({
         eventData
-      })
-      console.log('eventData', this.state)
+      }, () => console.log('EventInfo state', this.state))
     })
   }
 

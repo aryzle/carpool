@@ -1,4 +1,6 @@
 import React from 'react'
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import EventInfo from '../../components/EventInfo'
 import Waitlist from '../../components/Waitlist'
 import Cars from "../../components/Cars/index"
@@ -11,4 +13,4 @@ const Event = ({ match }) => (
   </div>
 )
 
-export default Event
+export default DragDropContext(HTML5Backend)(Event)

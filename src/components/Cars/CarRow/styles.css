@@ -1,0 +1,20 @@
+.CarRow {
+    background-color: antiquewhite;
+    border: solid 1px black;
+    padding: 5px 15px;
+}
+
+.CarRow-image {
+    height: 80px;
+    width: 80px;
+    float: left;
+}
+
+.CarRow-center {
+    display: inline-block;
+}
+
+.CarRow-right {
+    float: right;
+    min-width: 150px;
+}
