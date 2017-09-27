@@ -55,7 +55,9 @@ class Waitlist extends Component {
     const {personData, personIds } = this.state
     return (
       connectDropTarget(
-        <div className="Waitlist">
+        <div className="Waitlist" style={{
+          backgroundColor: isOver && 'yellow'
+        }}>
           <h2>Waitlist</h2>
           {personIds.map(id => {
             const person = personData[id]

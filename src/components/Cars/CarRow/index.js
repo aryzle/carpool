@@ -84,7 +84,9 @@ class CarRow extends Component {
     const { passengers = {} } = carData
     return (
       connectDropTarget(
-        <div className="CarRow">
+        <div className="CarRow" style={{
+          backgroundColor: isOver && 'yellow'
+        }}>
           <img className="CarRow-image" src={carSmall} alt="small car" />
           <div className="CarRow-center">
             <p>{`driver: ${carData.driver}`} -- {`${carData.seats} seats`}</p>
