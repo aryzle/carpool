@@ -33,7 +33,9 @@ export default class Cars extends Component {
     return (
       <div className="Cars">
         <h2>Cars</h2>
-        {carIds.map(id => <CarRow carId={id} eventId={eventId} />)}
+        <div className="Cars-list">
+          {carIds.map(id => <CarRow carId={id} eventId={eventId} />)}
+        </div>
         <AddCar eventId={eventId} />
       </div>
     );

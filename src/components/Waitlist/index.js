@@ -59,10 +59,12 @@ class Waitlist extends Component {
           backgroundColor: isOver && 'yellow'
         }}>
           <h2>Waitlist</h2>
-          {personIds.map(id => {
-            const person = personData[id]
-            return (!person.car && <Passenger key={id} passengerId={id} eventId={eventId} />)
-          })}
+          <div className="Waitlist-passengers">
+            {personIds.map(id => {
+              const person = personData[id]
+              return (!person.car && <Passenger key={id} inline passengerId={id} eventId={eventId} />)
+            })}
+          </div>
           <AddPerson eventId={eventId} />
         </div>
       )

@@ -28,6 +28,7 @@ class Passenger extends Component {
     passengerId: PropTypes.string,
     eventId: PropTypes.string,
     carId: PropTypes.string,
+    inline: PropTypes.bool,
     connectDragSource: PropTypes.func.isRequired,
     isDragging: PropTypes.bool.isRequired
   }
@@ -49,12 +50,13 @@ class Passenger extends Component {
   }
 
   render() {
-    const { connectDragSource, isDragging } = this.props
+    const { connectDragSource, isDragging, inline } = this.props
     const { passengerData } = this.state
     return (
       connectDragSource(
         <div className="PassengerInfo" style={{
           opacity: isDragging ? 0.5 : 1,
+          display: inline && 'inline-block',
           cursor: 'move'
         }}>
           <Label image>
