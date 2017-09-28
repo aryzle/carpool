@@ -61,7 +61,7 @@ class Passenger extends Component {
         }}>
           <Label image>
             <img src={chrisJPG} alt="chris" />
-            {passengerData.name} - {passengerData.city}
+            {passengerData.name}@{passengerData.city}
           </Label>
         </div>
       )

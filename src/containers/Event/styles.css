@@ -1,0 +1,4 @@
+.Cars-Waitlist-Container {
+    display: flex;
+    flex-direction: row;
+}

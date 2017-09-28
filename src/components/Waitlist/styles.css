@@ -1,5 +1,6 @@
 .Waitlist {
     padding: 15px;
+    flex-shrink: 1;
 }
 
 .Waitlist-passengers {

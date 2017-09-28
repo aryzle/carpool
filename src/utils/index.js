@@ -1,7 +1,7 @@
 import { without, union } from 'lodash/array'
 import { omit } from 'lodash/object'
 
-export const normToArr = norm => norm.ids.map(id => norm.data[id])
+export const normToArr = ({ ids, data }) => ids.map(id => data[id])
 
 export const toArr = (ids, data) => ids.map(id => data[id])
 
