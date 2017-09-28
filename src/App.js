@@ -10,7 +10,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <div className="App-header">
-            <h1>Carpool</h1>
+            <h1>cru carpool</h1>
           </div>
           <Route path="/e/:eventId" component={Event} />
         </div>
