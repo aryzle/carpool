@@ -11,6 +11,7 @@ export default class Cars extends Component {
     eventId: PropTypes.string
   }
   state = {
+    carData: {},
     carIds: []
   }
 
@@ -23,6 +24,7 @@ export default class Cars extends Component {
       const carData = snap.val()
       const carIds = Object.keys(carData)
       this.setState({
+        carData,
         carIds
       }, () => console.log('Cars state', this.state))
     })
@@ -30,13 +32,13 @@ export default class Cars extends Component {
 
   render() {
     const { eventId } = this.props
-    const { carIds } = this.state
+    const { carIds, carData } = this.state
     return (
       <div className="Cars">
         <Header as="h2">Cars</Header>
         <AddCar eventId={eventId} />
         <div className="Cars-list">
-          {carIds.map(id => <CarRow key={id} carId={id} eventId={eventId} />)}
+          {carIds.map(id => <CarRow key={id} car={carData[id]} eventId={eventId} />)}
         </div>
       </div>
     );

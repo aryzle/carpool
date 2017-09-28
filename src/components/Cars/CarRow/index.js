@@ -12,8 +12,15 @@ import carSmall from '../../../static/car-small.svg'
 import './styles.css'
 
 const passengerTarget = {
+  canDrop(props) {
+    const { car = {} } = props
+    const { seats, passengers = {} } = car
+
+    return seats > Object.keys(passengers).length
+  },
+
   drop(props, monitor) {
-    const { eventId, carId } = props
+    const { eventId, car: { id: carId } } = props
     const { passengerId, carId: oldCarId } = monitor.getItem('passengerId')
     if (oldCarId) {
       firebase.database().ref(`events/${eventId}/cars/${oldCarId}/passengers`).update({
@@ -32,32 +39,18 @@ const passengerTarget = {
 function collect(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
   }
 }
 
 class CarRow extends Component {
   static propTypes = {
     eventId: PropTypes.string,
-    carId: PropTypes.string,
+    car: PropTypes.object,
     connectDropTarget: PropTypes.func.isRequired,
-    isOver: PropTypes.bool.isRequired
-  }
-
-  state = {
-    carData: {}
-  }
-
-  componentDidMount() {
-    const { eventId, carId } = this.props
-    const eventRef = firebase.database().ref().child('events').child(eventId)
-    const carRef = eventRef.child('cars').child(carId)
-    carRef.on('value', snap => {
-      const carData = snap.val()
-      this.setState({
-        carData
-      }, () => console.log('CarRow state', this.state))
-    })
+    isOver: PropTypes.bool.isRequired,
+    canDrop: PropTypes.bool.isRequired
   }
 
   renderRiderIcons({ id, passengers = {}, seats }) {
@@ -79,23 +72,22 @@ class CarRow extends Component {
   }
 
   render() {
-    const { eventId, carId, connectDropTarget, isOver } = this.props
-    const { carData } = this.state
-    const { passengers = {} } = carData
+    const { eventId, car, connectDropTarget, isOver, canDrop } = this.props
+    const { passengers = {} } = car
     return (
       connectDropTarget(
         <div className="CarRow" style={{
-          backgroundColor: isOver && 'yellow'
+          backgroundColor: isOver && canDrop && 'yellow'
         }}>
           <img className="CarRow-image" src={carSmall} alt="small car" />
           <div className="CarRow-center">
-            <p>{`driver: ${carData.driver}`} -- {`${carData.seats} seats`}</p>
-            <p>{`Departure: ${moment(carData.departureDateTime).format('MMM Do, h:mm a')}`}</p>
-            {this.renderRiderIcons(carData)}
+            <p>{`driver: ${car.driver}`} -- {`${car.seats} seats`}</p>
+            <p>{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
+            {this.renderRiderIcons(car)}
           </div>
           <div className="CarRow-right">
             <p>Passengers</p>
-            {Object.keys(passengers).map(passengerId => <Passenger key={passengerId} passengerId={passengerId} carId={carId} eventId={eventId} />)}
+            {Object.keys(passengers).map(passengerId => <Passenger key={passengerId} passengerId={passengerId} carId={car.id} eventId={eventId} />)}
           </div>
         </div>
       )
