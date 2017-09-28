@@ -60,7 +60,7 @@ class Passenger extends Component {
           cursor: 'move'
         }}>
           <Label image>
-            <img src={chrisJPG} />
+            <img src={chrisJPG} alt="chris" />
             {passengerData.name} - {passengerData.city}
           </Label>
         </div>

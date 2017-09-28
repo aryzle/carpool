@@ -40,8 +40,8 @@ class CarRow extends Component {
   static propTypes = {
     eventId: PropTypes.string,
     carId: PropTypes.string,
-    connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired
+    connectDropTarget: PropTypes.func.isRequired,
+    isOver: PropTypes.bool.isRequired
   }
 
   state = {
@@ -67,12 +67,12 @@ class CarRow extends Component {
     let emptySeats = []
 
     for(let i=0; i<seatsLeft; i++) {
-      emptySeats.push(<AddPerson eventId={eventId} trigger={<Icon link size="big" name="add user"/>} carId={id} />)
+      emptySeats.push(<AddPerson key={i} eventId={eventId} trigger={<Icon link size="big" name="add user"/>} carId={id} />)
     }
 
     return (
       <div className="riders">
-        {passengersArr.map(_ => <Icon link size="large" name="user"/>)}
+        {passengersArr.map(p => <Icon key={p.id} link size="large" name="user" />)}
         {emptySeats}
       </div>
     )

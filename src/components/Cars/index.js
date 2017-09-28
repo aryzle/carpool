@@ -34,7 +34,7 @@ export default class Cars extends Component {
       <div className="Cars">
         <h2>Cars</h2>
         <div className="Cars-list">
-          {carIds.map(id => <CarRow carId={id} eventId={eventId} />)}
+          {carIds.map(id => <CarRow key={id} carId={id} eventId={eventId} />)}
         </div>
         <AddCar eventId={eventId} />
       </div>
