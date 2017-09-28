@@ -25,6 +25,7 @@ export default class AddCar extends Component {
     color:'',
     licensePlate:'',
     departureDateTime: '',
+    returnDateTime:'',
     label: '',
     info: '',
     success: false,
@@ -34,13 +35,15 @@ export default class AddCar extends Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleDateChange = date => this.setState({ departureDateTime: date })
+  handleDepartureDateChange = date => this.setState({ departureDateTime: date })
+  handleReturnDateChange = date => this.setState({ returnDateTime: date })
 
   handleSubmit = () => {
     const { eventId } = this.props
     const newPersonId = uuid()
     const newCarId = uuid()
     const departureDateTime = this.state.departureDateTime.valueOf()
+    const returnDateTime = this.state.returnDateTime.valueOf()
     console.log(departureDateTime)
     firebase.database().ref(`events/${eventId}/persons/${newPersonId}`).set(
       {
@@ -57,7 +60,8 @@ export default class AddCar extends Component {
             ['seats', 'model', 'color', 'licensePlate', 'label']),
           id: newCarId,
           driver: newPersonId,
-          departureDateTime
+          departureDateTime,
+          returnDateTime
         }
       )
     })
@@ -70,7 +74,7 @@ export default class AddCar extends Component {
 
   render() {
     const { name, email, phone, seats, city, address, state, departureDateTime,
-      model, color, licensePlate, info, success, error } = this.state
+      returnDateTime, model, color, licensePlate, info, success, error } = this.state
     return (
       <Modal trigger={<Button color="green">Add your Car</Button>}>
         <Modal.Header>Add Car</Modal.Header>
@@ -130,8 +134,18 @@ export default class AddCar extends Component {
             <Form.Field>
               <label>If you need to leave at a certain time, when?</label>
               <DatePicker
-                onChange={this.handleDateChange}
+                onChange={this.handleDepartureDateChange}
                 selected={departureDateTime}
+                shouldCloseOnSelect={false}
+                timeIntervals={15}
+                dateFormat="LLL"
+                showTimeSelect />
+            </Form.Field>
+            <Form.Field>
+              <label>If you need to return by a certain time, when?</label>
+              <DatePicker
+                onChange={this.handleReturnDateChange}
+                selected={returnDateTime}
                 shouldCloseOnSelect={false}
                 timeIntervals={15}
                 dateFormat="LLL"
