@@ -8,14 +8,22 @@
 .CarRow-image {
     height: 80px;
     width: 80px;
-    float: left;
+    margin: 20px;
+    align-self: center;
 }
 
 .CarRow-center {
-    display: inline-block;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+}
+
+.CarRow-center-depTime {
+    margin: 15px 0;
 }
 
 .CarRow-right {
-    float: right;
-    min-width: 150px;
+    min-width: 200px;
+    padding: 20px;
 }

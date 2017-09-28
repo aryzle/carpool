@@ -10,6 +10,7 @@ import { toArr } from '../../../utils'
 import { ItemTypes } from '../../../Constants'
 import carSmall from '../../../static/car-small.svg'
 import './styles.css'
+import Driver from "./Driver"
 
 const passengerTarget = {
   canDrop(props) {
@@ -81,8 +82,8 @@ class CarRow extends Component {
         }}>
           <img className="CarRow-image" src={carSmall} alt="small car" />
           <div className="CarRow-center">
-            <p>{`driver: ${car.driver}`} -- {`${car.seats} seats`}</p>
-            <p>{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
+            <Driver driverId={car.driver} eventId={eventId} />
+            <p className="CarRow-center-depTime">{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
             {this.renderRiderIcons(car)}
           </div>
           <div className="CarRow-right">

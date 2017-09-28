@@ -39,7 +39,7 @@ class Passenger extends Component {
 
   componentDidMount() {
     const { passengerId, eventId } = this.props
-    const eventRef = firebase.database().ref().child('events').child(eventId)
+    const eventRef = firebase.database().ref(`events/${eventId}`)
     const personRef = eventRef.child('persons').child(passengerId)
     personRef.on('value', snap => {
       const passengerData = snap.val()
@@ -59,9 +59,10 @@ class Passenger extends Component {
           display: inline && 'inline-block',
           cursor: 'move'
         }}>
-          <Label image>
+          <Label image color="teal">
             <img src={chrisJPG} alt="chris" />
             {passengerData.name}@{passengerData.city}
+            <Label.Detail>Passenger</Label.Detail>
           </Label>
         </div>
       )
