@@ -1,29 +1,35 @@
-.CarRow {
-    background-color: antiquewhite;
-    border: solid 1px black;
-    padding: 5px 15px;
-    display: flex;
-}
+/*.CarRow {*/
+    /*background-color: antiquewhite;*/
+    /*border: solid 1px black;*/
+    /*padding: 5px 15px;*/
+    /*display: flex;*/
+/*}*/
 
 .CarRow-image {
     height: 80px;
     width: 80px;
-    margin: 20px;
+    margin: 10px;
     align-self: center;
+    flex-grow: 1;
 }
 
 .CarRow-center {
     align-self: center;
     display: flex;
     flex-direction: column;
-    padding: 0 20px;
+    margin: 0 15px;
+    flex-grow: 4;
 }
 
 .CarRow-center-depTime {
-    margin: 15px 0;
+    font-weight: 600;
+}
+
+.CarRow-passengers {
+    margin-top: 15px;
 }
 
 .CarRow-right {
     min-width: 200px;
-    padding: 20px;
+    padding: 0 20px;
 }

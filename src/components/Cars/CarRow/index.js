@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Segment } from 'semantic-ui-react'
 import moment from 'moment'
-import AddPerson from '../../modals/AddPerson'
-import Passenger from '../../Passenger'
 import { toArr } from '../../../utils'
 import { ItemTypes } from '../../../Constants'
-import carSmall from '../../../static/car-small.svg'
-import './styles.css'
+import AddPerson from '../../modals/AddPerson'
+import Passenger from '../../Passenger'
 import Driver from "./Driver"
+import './styles.css'
+import carSmall from '../../../static/car-small.svg'
 
 const passengerTarget = {
   canDrop(props) {
@@ -61,12 +61,12 @@ class CarRow extends Component {
     let emptySeats = []
 
     for(let i=0; i<seatsLeft; i++) {
-      emptySeats.push(<AddPerson key={i} eventId={eventId} trigger={<Icon link size="big" name="add user"/>} carId={id} />)
+      emptySeats.push(<AddPerson key={i} eventId={eventId} trigger={<Icon link size="big" color="teal" name="add user"/>} carId={id} />)
     }
 
     return (
-      <div className="riders">
-        {passengersArr.map(p => <Icon key={p.id} link size="large" name="user" />)}
+      <div className="CarRow-passengers">
+        {passengersArr.map(p => <Icon key={p.id} size="large" color="gray" name="user" />)}
         {emptySeats}
       </div>
     )
@@ -78,18 +78,20 @@ class CarRow extends Component {
     return (
       connectDropTarget(
         <div className="CarRow" style={{
-          backgroundColor: isOver && canDrop && 'yellow'
+          backgroundColor: isOver && canDrop && "#EEE"
         }}>
-          <img className="CarRow-image" src={carSmall} alt="small car" />
-          <div className="CarRow-center">
-            <Driver driverId={car.driver} eventId={eventId} />
-            <p className="CarRow-center-depTime">{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
-            {this.renderRiderIcons(car)}
-          </div>
-          <div className="CarRow-right">
-            <p>Passengers</p>
-            {Object.keys(passengers).map(passengerId => <Passenger key={passengerId} passengerId={passengerId} carId={car.id} eventId={eventId} />)}
-          </div>
+          <Segment raised style={{display: "flex", flexWrap: "wrap", backgroundColor: "inherit", margin: "5px 0"}}>
+            <img className="CarRow-image" src={carSmall} alt="small car" />
+            <div className="CarRow-center">
+              <p className="CarRow-center-depTime">{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
+              <Driver driverId={car.driver} eventId={eventId} />
+              {this.renderRiderIcons(car)}
+            </div>
+            <div className="CarRow-right">
+              <p>Passengers</p>
+              {Object.keys(passengers).map(passengerId => <Passenger key={passengerId} passengerId={passengerId} carId={car.id} eventId={eventId} />)}
+            </div>
+          </Segment>
         </div>
       )
     )

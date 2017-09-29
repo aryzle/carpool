@@ -76,7 +76,7 @@ export default class AddCar extends Component {
     const { name, email, phone, seats, city, address, state, departureDateTime,
       returnDateTime, model, color, licensePlate, info, success, error } = this.state
     return (
-      <Modal trigger={<Button color="green">Add your Car</Button>}>
+      <Modal trigger={<Button inverted color="green">Add your Car</Button>}>
         <Modal.Header>Add Car</Modal.Header>
         <Modal.Content form>
           <Form onSubmit={this.handleSubmit} size="small" success={success}

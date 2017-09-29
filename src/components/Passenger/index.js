@@ -62,7 +62,6 @@ class Passenger extends Component {
           <Label image color="teal">
             <img src={chrisJPG} alt="chris" />
             {passengerData.name}@{passengerData.city}
-            <Label.Detail>Passenger</Label.Detail>
           </Label>
         </div>
       )

@@ -65,7 +65,7 @@ export default class AddPerson extends Component {
     const { name, email, phone, city, address, state, earliestDepartureDateTime, latestReturnDateTime, info, success, error } = this.state
 
     return (
-      <Modal trigger={trigger || <Button primary>Need a ride?</Button>}>
+      <Modal trigger={trigger || <Button inverted color="blue">Need a ride?</Button>}>
         <Modal.Header>Join the Carpool!</Modal.Header>
         <Modal.Content form>
           <Form onSubmit={this.handleSubmit} size="small" success={success} error={error}>

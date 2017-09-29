@@ -63,24 +63,22 @@ class Waitlist extends Component {
     const { eventId, connectDropTarget, isOver } = this.props
     const { personArr } = this.state
 
-    return (
-      connectDropTarget(
-        <div className="Waitlist" style={{
-          backgroundColor: isOver && 'yellow'
-        }}>
-          <Header as="h2">Waitlist</Header>
-          <AddPerson eventId={eventId} />
-          <List>
-            {personArr.map(({ id, earliestDepartureDateTime }) => (
-              <List.Item key={`${id}-List.Item`}>
-                <List.Content>
-                  <Passenger inline key={id} passengerId={id} eventId={eventId} />
-                  <Label color="blue" tag>{moment(earliestDepartureDateTime).format('ddd h:mm a')}</Label>
-                </List.Content>
-              </List.Item>))}
-          </List>
-        </div>
-      )
+    return connectDropTarget(
+      <div className="Waitlist" style={{
+        backgroundColor: isOver && "#EEE"
+      }}>
+        <Header as="h2">Waitlist</Header>
+        <AddPerson eventId={eventId} />
+        <List>
+          {personArr.map(({ id, earliestDepartureDateTime }) => (
+            <List.Item key={`${id}-List.Item`}>
+              <List.Content>
+                <Passenger inline key={id} passengerId={id} eventId={eventId} />
+                <Label color="blue" tag>{moment(earliestDepartureDateTime).format('ddd h:mm a')}</Label>
+              </List.Content>
+            </List.Item>))}
+        </List>
+      </div>
     )
   }
 }

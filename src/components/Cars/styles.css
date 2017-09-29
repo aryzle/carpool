@@ -1,6 +1,6 @@
 .Cars {
     padding: 15px;
-    flex-shrink: 2;
+    flex-grow: 5;
 }
 
 .Cars-list {

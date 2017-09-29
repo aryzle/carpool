@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Header } from 'semantic-ui-react'
+import { Header, Item } from 'semantic-ui-react'
 import AddCar from '../modals/AddCar'
 import CarRow from './CarRow'
 import './styles.css'
@@ -37,9 +37,9 @@ export default class Cars extends Component {
       <div className="Cars">
         <Header as="h2">Cars</Header>
         <AddCar eventId={eventId} />
-        <div className="Cars-list">
+        <Item.Group>
           {carIds.map(id => <CarRow key={id} car={carData[id]} eventId={eventId} />)}
-        </div>
+        </Item.Group>
       </div>
     );
   }
