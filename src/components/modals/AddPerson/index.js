@@ -48,7 +48,7 @@ export default class AddPerson extends Component {
     })
     .then(() => {
       if (carId) {
-        return firebase.database().ref(`events/${eventId}/cars/${carId}/riders`).update({
+        return firebase.database().ref(`events/${eventId}/cars/${carId}/passengers`).update({
           [newPersonId]: true
         })
       }

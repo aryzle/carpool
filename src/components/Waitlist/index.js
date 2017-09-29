@@ -74,7 +74,9 @@ class Waitlist extends Component {
             <List.Item key={`${id}-List.Item`}>
               <List.Content>
                 <Passenger inline key={id} passengerId={id} eventId={eventId} />
-                <Label color="blue" tag>{moment(earliestDepartureDateTime).format('ddd h:mm a')}</Label>
+                {earliestDepartureDateTime &&
+                  <Label color="blue" tag>{moment(earliestDepartureDateTime).format('ddd h:mm a')}</Label>
+                }
               </List.Content>
             </List.Item>))}
         </List>
