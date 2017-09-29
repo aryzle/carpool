@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Icon, Segment } from 'semantic-ui-react'
+import { Button, Confirm, Icon, Image, Segment } from 'semantic-ui-react'
 import moment from 'moment'
-import { toArr } from '../../../utils'
 import { ItemTypes } from '../../../Constants'
 import AddPerson from '../../modals/AddPerson'
 import Passenger from '../../Passenger'
@@ -53,11 +52,30 @@ class CarRow extends Component {
     isOver: PropTypes.bool.isRequired,
     canDrop: PropTypes.bool.isRequired
   }
+  state = {
+    showConfirm: false
+  }
+
+  deleteCar = () => {
+    const { eventId, car } = this.props
+    const { passengers = {} } = car
+
+    Promise.all(
+      Object.keys(passengers).map(id =>
+        firebase.database().ref(`events/${eventId}/persons/${id}/car`).remove()
+      )
+    ).then(() =>
+      firebase.database().ref(`/events/${eventId}/cars/${car.id}`).remove()
+    )
+  }
+
+  showConfirm = () => this.setState({ showConfirm: true })
+  handleCancel = () => this.setState({ showConfirm: false })
 
   renderRiderIcons({ id, passengers = {}, seats }) {
     const { eventId } = this.props
-    const passengersArr = toArr(Object.keys(passengers), passengers)
-    const seatsLeft = seats - passengersArr.length
+    const passengerIds = Object.keys(passengers)
+    const seatsLeft = seats - passengerIds.length
     let emptySeats = []
 
     for(let i=0; i<seatsLeft; i++) {
@@ -66,7 +84,7 @@ class CarRow extends Component {
 
     return (
       <div className="CarRow-passengers">
-        {passengersArr.map(p => <Icon key={p.id} size="large" color="gray" name="user" />)}
+        {passengerIds.map(id => <Icon key={id} size="large" name="user" />)}
         {emptySeats}
       </div>
     )
@@ -74,14 +92,18 @@ class CarRow extends Component {
 
   render() {
     const { eventId, car, connectDropTarget, isOver, canDrop } = this.props
+    const { showConfirm } = this.state
     const { passengers = {} } = car
+
     return (
       connectDropTarget(
         <div className="CarRow" style={{
           backgroundColor: isOver && canDrop && "#EEE"
         }}>
           <Segment raised style={{display: "flex", flexWrap: "wrap", backgroundColor: "inherit", margin: "5px 0"}}>
-            <img className="CarRow-image" src={carSmall} alt="small car" />
+            <Image
+              className="CarRow-image"
+              src={carSmall} alt="small car" />
             <div className="CarRow-center">
               <p className="CarRow-center-depTime">{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
               <Driver driverId={car.driver} eventId={eventId} />
@@ -91,6 +113,20 @@ class CarRow extends Component {
               <p>Passengers</p>
               {Object.keys(passengers).map(passengerId => <Passenger key={passengerId} passengerId={passengerId} carId={car.id} eventId={eventId} />)}
             </div>
+            <Button
+              icon="delete"
+              color="red"
+              size="mini"
+              attached="right"
+              style={{height: "30px", position: "absolute", right: 10}}
+              onClick={this.showConfirm}
+              inverted />
+            <Confirm
+              open={showConfirm}
+              content="Are you sure? The driver will also be deleted and all of the passengers will be notified and moved to the Waitlist."
+              confirmButton="Delete"
+              onCancel={this.handleCancel}
+              onConfirm={this.deleteCar} />
           </Segment>
         </div>
       )
