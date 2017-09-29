@@ -12,11 +12,11 @@ import './styles.css'
 import carSmall from '../../../static/car-small.svg'
 
 const passengerTarget = {
-  canDrop(props) {
-    const { car = {} } = props
-    const { seats, passengers = {} } = car
+  canDrop(props, monitor) {
+    const { car: { id: carId, seats, passengers = {} } }  = props
+    const { carId: oldCarId } = monitor.getItem()
 
-    return seats > Object.keys(passengers).length
+    return (seats > Object.keys(passengers).length) && (carId !== oldCarId)
   },
 
   drop(props, monitor) {
