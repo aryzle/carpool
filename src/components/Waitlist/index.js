@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Header, Label, List } from 'semantic-ui-react'
-import moment from 'moment'
+import { Header, List } from 'semantic-ui-react'
 import AddPerson from '../modals/AddPerson'
 import Passenger from '../Passenger'
 import { normToArr } from "../../utils/index"
@@ -70,13 +69,10 @@ class Waitlist extends Component {
         <Header as="h2">Waitlist</Header>
         <AddPerson eventId={eventId} />
         <List>
-          {personArr.map(({ id, earliestDepartureDateTime }) => (
+          {personArr.map(({ id }) => (
             <List.Item key={`${id}-List.Item`}>
               <List.Content>
                 <Passenger inline key={id} passengerId={id} eventId={eventId} />
-                {earliestDepartureDateTime &&
-                  <Label color="blue" tag>{moment(earliestDepartureDateTime).format('ddd h:mm a')}</Label>
-                }
               </List.Content>
             </List.Item>))}
         </List>

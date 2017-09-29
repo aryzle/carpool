@@ -20,7 +20,7 @@ const Event = ({ match }) => (
       <EventInfo eventId={match.params.eventId} />
       <div className="Cars-Waitlist-Container">
         <Cars eventId={match.params.eventId} />
-        <Segment raised>
+        <Segment raised style={{height: "100%"}}>
           <Waitlist eventId={match.params.eventId} />
         </Segment>
       </div>
