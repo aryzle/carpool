@@ -20,8 +20,12 @@
     border: none !important;
 }
 
-.navbar-menu a {
-    color: white;
+button a {
+    color: inherit;
+}
+
+a:hover {
+    color: inherit;
 }
 
 .Hero-video {

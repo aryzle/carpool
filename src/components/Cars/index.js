@@ -21,7 +21,7 @@ export default class Cars extends Component {
     const carRef = eventRef.child('cars')
 
     carRef.on('value', snap => {
-      const carData = snap.val()
+      const carData = snap.val() || {}
       const carIds = Object.keys(carData)
       this.setState({
         carData,

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Home from './containers/Home'
 import Event from './containers/Event'
+import CreateEvent from './containers/CreateEvent'
 import LoginForm from './containers/Login/Login'
 import './App.css'
 import './css/core.css'
@@ -13,6 +14,7 @@ class App extends Component {
         <div className="App">
           <Route exact path="/" component={Home}/>
           <Route path="/login" component={LoginForm} />
+          <Route exact path="/e" component={CreateEvent} />
           <Route path="/e/:eventId" component={Event} />
         </div>
       </Router>

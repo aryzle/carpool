@@ -35,7 +35,7 @@ export default class EventInfo extends Component {
         <h2>{eventData.name}</h2>
         <h3>{location.name}</h3>
         <p>{location.address}</p>
-        <p>{moment(eventData.beginTime).format('MMM Do, h:mm a')} - {moment(eventData.endTime).format('MMM Do, h:mm a')}</p>
+        <p>{moment(eventData.startDateTime).format('MMM Do, h:mm a')} - {moment(eventData.endDateTime).format('MMM Do, h:mm a')}</p>
       </div>
     );
   }

@@ -49,7 +49,7 @@ class Waitlist extends Component {
       .endAt(null)
 
     personsRef.on('value', snap => {
-      const personData = snap.val()
+      const personData = snap.val() || {}
       const personArr = normToArr({ ids: Object.keys(personData), data: personData })
         .sort((a, b) => a.earliestDepartureDateTime > b.earliestDepartureDateTime)
       this.setState({

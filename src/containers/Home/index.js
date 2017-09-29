@@ -63,7 +63,7 @@ export default class Home extends Component {
               <Menu inverted pointing secondary size='large' className="navbar-menu">
                 <Menu.Item as='a' active>Home</Menu.Item>
                 <Menu.Item position='right'>
-                  <Button inverted><Link to="/login">Log in</Link></Button>
+                  <Button inverted>Log in</Button>
                   <Button as='a' inverted style={{ marginLeft: '0.5em' }}>Sign Up</Button>
                 </Menu.Item>
               </Menu>
@@ -83,7 +83,7 @@ export default class Home extends Component {
                 style={{ fontSize: '1.7em', fontWeight: 'normal' }}
               />
               <Button primary size='huge'>
-                Get Started
+                <Link to="/e">Get Started</Link>
                 <Icon name='right arrow' />
               </Button>
             </Container>

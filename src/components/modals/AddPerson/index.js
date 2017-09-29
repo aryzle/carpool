@@ -63,6 +63,7 @@ export default class AddPerson extends Component {
   render() {
     const { trigger } = this.props
     const { name, email, phone, city, address, state, earliestDepartureDateTime, latestReturnDateTime, info, success, error } = this.state
+
     return (
       <Modal trigger={trigger || <Button primary>Need a ride?</Button>}>
         <Modal.Header>Join the Carpool!</Modal.Header>
