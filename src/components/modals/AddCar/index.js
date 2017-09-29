@@ -74,7 +74,7 @@ export default class AddCar extends Component {
 
   render() {
     const { name, email, phone, seats, city, address, state, departureDateTime,
-      returnDateTime, model, color, licensePlate, info, success, error } = this.state
+      returnDateTime, model, color, licensePlate, label, info, success, error } = this.state
     return (
       <Modal trigger={<Button inverted color="green">Add your Car</Button>}>
         <Modal.Header>Add Car</Modal.Header>
@@ -111,25 +111,34 @@ export default class AddCar extends Component {
               </Header.Content>
             </Header>
             <Form.Select
+              required
               placeholder="Seats"
               name="seats"
               value={seats}
               options={seatOptions}
               onChange={this.handleChange} />
             <Form.Input
-              placeholder="make model e.g. Ford Focus"
+              required
+              placeholder="make model* e.g. Ford Focus"
               name="model"
               value={model}
               onChange={this.handleChange} />
             <Form.Input
-              placeholder="color"
+              required
+              placeholder="color*"
               name="color"
               value={color}
               onChange={this.handleChange} />
             <Form.Input
-              placeholder="License Plate"
+              required
+              placeholder="License Plate* (this is so that your passengers can find you!)"
               name="licensePlate"
               value={licensePlate}
+              onChange={this.handleChange} />
+            <Form.Input
+              placeholder="Label (think of something fun, like 'karaoke carpool' or 'coffee lovers')"
+              name="label"
+              value={label}
               onChange={this.handleChange} />
             <Form.Field>
               <label>If you need to leave at a certain time, when?</label>
@@ -155,13 +164,11 @@ export default class AddCar extends Component {
             <Message
               success
               header="Form Completed"
-              content="You're all signed up!"
-            />
+              content="You're all signed up!" />
             <Message
               error
               header="Oops!"
-              content="Something went wrong, please try again later."
-            />
+              content="Something went wrong, please try again later." />
           </Form>
         </Modal.Content>
       </Modal>

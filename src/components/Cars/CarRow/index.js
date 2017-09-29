@@ -93,7 +93,7 @@ class CarRow extends Component {
   render() {
     const { eventId, car, connectDropTarget, isOver, canDrop } = this.props
     const { showConfirm } = this.state
-    const { passengers = {} } = car
+    const { passengers = {}, driver, departureDateTime, label  } = car
 
     return (
       connectDropTarget(
@@ -102,11 +102,12 @@ class CarRow extends Component {
         }}>
           <Segment raised style={{display: "flex", flexWrap: "wrap", backgroundColor: "inherit", margin: "5px 0"}}>
             <Image
+              label={{ color: 'teal', content: label, size: "small", ribbon: "right" }}
               className="CarRow-image"
               src={carSmall} alt="small car" />
             <div className="CarRow-center">
-              <p className="CarRow-center-depTime">{`Departure: ${moment(car.departureDateTime).format('MMM Do, h:mm a')}`}</p>
-              <Driver driverId={car.driver} eventId={eventId} />
+              <p className="CarRow-center-depTime">{`Leaving: ${departureDateTime ? `${moment(departureDateTime).format('MMM Do, h:mm a')}` : 'open'}`}</p>
+              <Driver driverId={driver} eventId={eventId} />
               {this.renderRiderIcons(car)}
             </div>
             <div className="CarRow-right">

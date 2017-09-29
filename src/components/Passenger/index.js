@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { DragSource } from 'react-dnd'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Card, Icon, Label, Popup } from 'semantic-ui-react'
+import { Label, Popup } from 'semantic-ui-react'
 import moment from 'moment'
 import { ItemTypes } from '../../Constants'
+import PassengerCard from './Card'
 import chrisJPG from '../../static/chris.jpg'
 import './styles.css'
 
@@ -40,8 +41,7 @@ class Passenger extends Component {
 
   componentDidMount() {
     const { passengerId, eventId } = this.props
-    const eventRef = firebase.database().ref(`events/${eventId}`)
-    const personRef = eventRef.child('persons').child(passengerId)
+    const personRef = firebase.database().ref(`events/${eventId}/persons/${passengerId}`)
     personRef.on('value', snap => {
       const passengerData = snap.val()
       this.setState({
@@ -50,9 +50,17 @@ class Passenger extends Component {
     })
   }
 
+  componentWillUnmount() {
+    const { passengerId, eventId } = this.props
+    const personRef = firebase.database().ref(`events/${eventId}/persons/${passengerId}`)
+    personRef.off()
+  }
+
   render() {
-    const { connectDragSource, isDragging, inline } = this.props
-    const { passengerData: { info, car, name, email, city, state, address, earliestDepartureDateTime, latestReturnDateTime } } = this.state
+    const { connectDragSource, isDragging, inline, eventId } = this.props
+    const { passengerData } = this.state
+    const { car, name, city, earliestDepartureDateTime } = passengerData
+
     return (
       connectDragSource(
         <div className="PassengerInfo" style={{
@@ -62,47 +70,14 @@ class Passenger extends Component {
         }}>
           <Popup
             trigger={
-              <Label image color={car ? "teal" : "blue"}>
+              <Label image basic color={car ? "teal" : "blue"}>
                 <img src={chrisJPG} alt="chris" />
                 {name}@{city}
                 {earliestDepartureDateTime && !car &&
                   <Label.Detail>{moment(earliestDepartureDateTime).format('ddd h:mm a')}</Label.Detail>
                 }
               </Label>}
-            content={
-              <Card>
-                <Card.Content>
-                  <Card.Header>
-                    {name}
-                  </Card.Header>
-                  <Card.Meta>
-                    {email}
-                    <br/>
-                    {`${address ? `${address},` : ''} ${city}, ${state} `}
-                  </Card.Meta>
-                  <Card.Description>
-                    The earliest I can leave
-                    <Label
-                      content={earliestDepartureDateTime ? moment(earliestDepartureDateTime).format('ddd h:mm a') : 'any time'}
-                      pointing="left"
-                      basic
-                      />
-                    <br/>
-                    I'd like to be back by
-                    <Label
-                      content={latestReturnDateTime ? moment(latestReturnDateTime).format('ddd h:mm a') : 'any time'}
-                      pointing="left"
-                      basic
-                    />
-                  </Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                  <a>
-                    <Icon name='user' />
-                    {info}
-                  </a>
-                </Card.Content>
-              </Card>}
+            content={<PassengerCard passenger={passengerData} eventId={eventId} />}
             on='click'
             hideOnScroll
           />
