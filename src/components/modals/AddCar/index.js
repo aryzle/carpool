@@ -158,11 +158,11 @@ export default class AddCar extends Component {
               value={address}
               onChange={this.handleChange}
             />
-            <Form.Select
-              placeholder="State"
+            <Form.Input
+              required
+              placeholder="State* (e.g. VA, MD)"
               name="state"
               value={state}
-              options={stateOptions}
               onChange={this.handleChange}
             />
             <Form.TextArea
@@ -211,7 +211,7 @@ export default class AddCar extends Component {
               onChange={this.handleChange}
             />
             <Form.Field>
-              <label>If you need to leave at a certain time, when?</label>
+              <label>Do you need to leave by a certain time?</label>
               <DatePicker
                 onChange={this.handleDepartureDateChange}
                 selected={departureDateTime}
@@ -222,7 +222,7 @@ export default class AddCar extends Component {
               />
             </Form.Field>
             <Form.Field>
-              <label>If you need to return by a certain time, when?</label>
+              <label>Is there a time you need to be back by?</label>
               <DatePicker
                 onChange={this.handleReturnDateChange}
                 selected={returnDateTime}

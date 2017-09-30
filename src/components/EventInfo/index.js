@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import firebase from 'firebase';
-import { Divider, Header, Icon } from 'semantic-ui-react';
+import { Divider, Header, Icon, Portal } from 'semantic-ui-react';
 import moment from 'moment';
 import './styles.css';
 
@@ -10,12 +10,10 @@ export default class EventInfo extends Component {
     eventId: PropTypes.string
   };
 
-  constructor() {
-    super();
-    this.state = {
-      eventData: {}
-    };
-  }
+  state = {
+    eventData: {},
+    portalOpen: false
+  };
 
   componentDidMount() {
     const { eventId } = this.props;

@@ -5,7 +5,6 @@ import { Button, Form, Message, Modal } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
 import { omit } from 'lodash/object';
 import uuid from 'uuid/v4';
-import { stateOptions } from '../shared';
 
 export default class AddPerson extends Component {
   static propTypes = {
@@ -139,12 +138,11 @@ export default class AddPerson extends Component {
               value={address}
               onChange={this.handleChange}
             />
-            <Form.Select
+            <Form.Input
               required
-              placeholder="State"
+              placeholder="State* (e.g. VA, MD)"
               name="state"
               value={state}
-              options={stateOptions}
               onChange={this.handleChange}
             />
             <Form.Field required>
@@ -159,7 +157,7 @@ export default class AddPerson extends Component {
               />
             </Form.Field>
             <Form.Field required>
-              <label>When is the latest you want to be back by?</label>
+              <label>Is there a time you need to be back by?</label>
               <DatePicker
                 onChange={this.handleRetDateChange}
                 selected={latestReturnDateTime}

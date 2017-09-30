@@ -32,6 +32,7 @@ const DriverCard = ({ passenger }) => {
                 : 'any time'
             }
             pointing="left"
+            icon="time"
             basic
           />
           <br />
@@ -43,6 +44,7 @@ const DriverCard = ({ passenger }) => {
                 : 'any time'
             }
             pointing="left"
+            icon="time"
             basic
           />
         </Card.Description>
