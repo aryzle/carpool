@@ -1,8 +1,8 @@
 .Cars {
-    padding: 15px;
-    flex-grow: 5;
+  padding: 15px;
+  flex-grow: 10;
 }
 
 .Cars-list {
-    padding: 10px 0;
+  padding: 10px 0;
 }

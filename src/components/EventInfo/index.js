@@ -1,41 +1,41 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import firebase from 'firebase';
-import { Divider, Header, Icon, Portal } from 'semantic-ui-react';
-import moment from 'moment';
-import './styles.css';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import firebase from 'firebase'
+import { Divider, Header, Icon } from 'semantic-ui-react'
+import moment from 'moment'
+import './styles.css'
 
 export default class EventInfo extends Component {
   static propTypes = {
     eventId: PropTypes.string
-  };
+  }
 
   state = {
     eventData: {},
     portalOpen: false
-  };
+  }
 
   componentDidMount() {
-    const { eventId } = this.props;
+    const { eventId } = this.props
     const eventRef = firebase
       .database()
       .ref()
       .child('events')
-      .child(eventId);
+      .child(eventId)
     eventRef.on('value', snap => {
-      const eventData = snap.val();
+      const eventData = snap.val()
       this.setState(
         {
           eventData
         },
         () => console.log('EventInfo state', this.state)
-      );
-    });
+      )
+    })
   }
 
   render() {
-    const { eventData } = this.state;
-    const { location = {} } = eventData;
+    const { eventData } = this.state
+    const { location = {} } = eventData
     return (
       <div className="EventInfo">
         <Header as="h1" content={eventData.name} />
@@ -65,6 +65,6 @@ export default class EventInfo extends Component {
           </Header.Content>
         </Header>
       </div>
-    );
+    )
   }
 }

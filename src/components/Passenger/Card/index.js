@@ -1,13 +1,21 @@
-import React from 'react';
-import firebase from 'firebase';
-import { Card, Icon, Label } from 'semantic-ui-react';
-import moment from 'moment';
+import React from 'react'
+import firebase from 'firebase'
+import { Card, Icon, Label } from 'semantic-ui-react'
+import moment from 'moment'
+import AddPerson from '../../modals/AddPerson/index'
 
-const handleDelete = (personId, eventId) => () =>
+const handleDelete = (personId, carId, eventId) => () => {
+  if (carId) {
+    firebase
+      .database()
+      .ref(`events/${eventId}/cars/${carId}/passengers/${personId}`)
+      .remove()
+  }
   firebase
     .database()
     .ref(`events/${eventId}/persons/${personId}`)
-    .remove();
+    .remove()
+}
 
 const PassengerCard = ({ passenger, eventId }) => {
   const {
@@ -18,8 +26,9 @@ const PassengerCard = ({ passenger, eventId }) => {
     state,
     earliestDepartureDateTime,
     latestReturnDateTime,
-    info
-  } = passenger;
+    info,
+    car
+  } = passenger
 
   return (
     <Card>
@@ -63,12 +72,19 @@ const PassengerCard = ({ passenger, eventId }) => {
           color="red"
           name="trash outline"
           style={{ float: 'right' }}
-          onClick={handleDelete(passenger.id, eventId)}
+          onClick={handleDelete(passenger.id, car, eventId)}
           link
+        />
+        <AddPerson
+          eventId={eventId}
+          trigger={
+            <Icon name="edit" color="yellow" style={{ float: 'right' }} link />
+          }
+          person={passenger}
         />
       </Card.Content>
     </Card>
-  );
-};
+  )
+}
 
-export default PassengerCard;
+export default PassengerCard

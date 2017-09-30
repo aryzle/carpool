@@ -1,17 +1,19 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import firebase from 'firebase';
-import { Button, Form, Message, Modal } from 'semantic-ui-react';
-import DatePicker from 'react-datepicker';
-import { omit } from 'lodash/object';
-import uuid from 'uuid/v4';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import firebase from 'firebase'
+import { Button, Form, Message, Modal } from 'semantic-ui-react'
+import DatePicker from 'react-datepicker'
+import { omit } from 'lodash/object'
+import moment from 'moment'
+import uuid from 'uuid/v4'
 
 export default class AddPerson extends Component {
   static propTypes = {
     eventId: PropTypes.string,
     trigger: PropTypes.element,
-    carId: PropTypes.string
-  };
+    carId: PropTypes.string,
+    person: PropTypes.object
+  }
 
   state = {
     name: '',
@@ -25,19 +27,19 @@ export default class AddPerson extends Component {
     info: '',
     success: false,
     error: false
-  };
+  }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleDepDateChange = date =>
-    this.setState({ earliestDepartureDateTime: date });
-  handleRetDateChange = date => this.setState({ latestReturnDateTime: date });
+    this.setState({ earliestDepartureDateTime: date })
+  handleRetDateChange = date => this.setState({ latestReturnDateTime: date })
 
   handleSubmit = () => {
-    const { eventId, carId } = this.props;
-    const newPersonId = uuid();
-    const earliestDepartureDateTime = this.state.earliestDepartureDateTime.valueOf();
-    const latestReturnDateTime = this.state.latestReturnDateTime.valueOf();
+    const { eventId, carId } = this.props
+    const newPersonId = uuid()
+    const earliestDepartureDateTime = this.state.earliestDepartureDateTime.valueOf()
+    const latestReturnDateTime = this.state.latestReturnDateTime.valueOf()
     firebase
       .database()
       .ref(`events/${eventId}/persons/${newPersonId}`)
@@ -60,18 +62,34 @@ export default class AddPerson extends Component {
             .ref(`events/${eventId}/cars/${carId}/passengers`)
             .update({
               [newPersonId]: true
-            });
+            })
         }
       })
       .then(() => this.setState({ success: true }))
       .catch(e => {
-        console.log(e);
-        this.setState({ error: true });
-      });
-  };
+        console.log(e)
+        this.setState({ error: true })
+      })
+  }
+
+  componentDidMount() {
+    const { person } = this.props
+
+    if (person) {
+      this.setState({
+        ...person,
+        earliestDepartureDateTime: person.earliestDepartureDateTime
+          ? moment(person.earliestDepartureDateTime)
+          : '',
+        latestReturnDateTime: person.latestReturnDateTime
+          ? moment(person.latestReturnDateTime)
+          : ''
+      })
+    }
+  }
 
   render() {
-    const { trigger } = this.props;
+    const { trigger } = this.props
     const {
       name,
       email,
@@ -84,7 +102,7 @@ export default class AddPerson extends Component {
       info,
       success,
       error
-    } = this.state;
+    } = this.state
 
     return (
       <Modal
@@ -187,6 +205,6 @@ export default class AddPerson extends Component {
           </Form>
         </Modal.Content>
       </Modal>
-    );
+    )
   }
 }

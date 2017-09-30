@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import firebase from 'firebase';
-import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { pick } from 'lodash/object';
-import uuid from 'uuid/v4';
-import { seatOptions, stateOptions } from '../shared';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import firebase from 'firebase'
+import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { pick } from 'lodash/object'
+import uuid from 'uuid/v4'
+import { seatOptions } from '../shared'
 
 export default class AddCar extends Component {
   static propTypes = {
     eventId: PropTypes.string
-  };
+  }
 
   state = {
     name: '',
@@ -30,21 +30,20 @@ export default class AddCar extends Component {
     info: '',
     success: false,
     error: false
-  };
+  }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleDepartureDateChange = date =>
-    this.setState({ departureDateTime: date });
-  handleReturnDateChange = date => this.setState({ returnDateTime: date });
+  handleDepartureDateChange = date => this.setState({ departureDateTime: date })
+  handleReturnDateChange = date => this.setState({ returnDateTime: date })
 
   handleSubmit = () => {
-    const { eventId } = this.props;
-    const newPersonId = uuid();
-    const newCarId = uuid();
-    const departureDateTime = this.state.departureDateTime.valueOf();
-    const returnDateTime = this.state.returnDateTime.valueOf();
-    console.log(departureDateTime);
+    const { eventId } = this.props
+    const newPersonId = uuid()
+    const newCarId = uuid()
+    const departureDateTime = this.state.departureDateTime.valueOf()
+    const returnDateTime = this.state.returnDateTime.valueOf()
+    console.log(departureDateTime)
     firebase
       .database()
       .ref(`events/${eventId}/persons/${newPersonId}`)
@@ -76,14 +75,14 @@ export default class AddCar extends Component {
             driver: newPersonId,
             departureDateTime,
             returnDateTime
-          });
+          })
       })
       .then(this.setState({ success: true }))
       .catch(e => {
-        console.log(e);
-        this.setState({ error: true });
-      });
-  };
+        console.log(e)
+        this.setState({ error: true })
+      })
+  }
 
   render() {
     const {
@@ -103,16 +102,9 @@ export default class AddCar extends Component {
       info,
       success,
       error
-    } = this.state;
+    } = this.state
     return (
-      <Modal
-        trigger={
-          <Button inverted color="green">
-            Add your Car
-          </Button>
-        }
-        closeIcon
-      >
+      <Modal trigger={<Button color="teal">Add your Car</Button>} closeIcon>
         <Modal.Header>Add Car</Modal.Header>
         <Modal.Content form>
           <Form
@@ -246,6 +238,6 @@ export default class AddCar extends Component {
           </Form>
         </Modal.Content>
       </Modal>
-    );
+    )
   }
 }

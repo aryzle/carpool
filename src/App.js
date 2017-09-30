@@ -6,13 +6,14 @@ import CreateEvent from './containers/CreateEvent'
 import LoginForm from './containers/Login/Login'
 import './App.css'
 import './css/core.css'
+import './css/semantic-overrides.css'
 
 class App extends Component {
   render() {
     return (
       <Router>
         <div className="App">
-          <Route exact path="/" component={Home}/>
+          <Route exact path="/" component={Home} />
           <Route path="/login" component={LoginForm} />
           <Route exact path="/e" component={CreateEvent} />
           <Route path="/e/:eventId" component={Event} />
