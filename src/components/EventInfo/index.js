@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import firebase from 'firebase';
-import { Divider, Header } from 'semantic-ui-react';
+import { Divider, Header, Icon } from 'semantic-ui-react';
 import moment from 'moment';
 import './styles.css';
 
@@ -40,14 +40,32 @@ export default class EventInfo extends Component {
     const { location = {} } = eventData;
     return (
       <div className="EventInfo">
-        <Header as="h1" icon="free code camp" content={eventData.name} />
+        <Header as="h1" content={eventData.name} />
         <Divider />
-        <h3>{location.name}</h3>
-        <p>{location.address}</p>
-        <p>
-          {moment(eventData.startDateTime).format('MMM Do, h:mm a')} -{' '}
-          {moment(eventData.endDateTime).format('MMM Do, h:mm a')}
-        </p>
+        <Header as="h3">
+          <Icon name="marker" />
+          <Header.Content>
+            <a
+              target="_blank"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                location.name
+              )}`}
+            >
+              {location.name}
+            </a>
+            <Header.Subheader>{location.address}</Header.Subheader>
+          </Header.Content>
+        </Header>
+        <Header as="h3">
+          <Icon name="time" />
+          <Header.Content>
+            {moment(eventData.startDateTime).format('dddd MMMM D, YYYY h:mm A')}
+            <Header.Subheader>
+              -{' '}
+              {moment(eventData.endDateTime).format('dddd MMMM D, YYYY h:mm A')}
+            </Header.Subheader>
+          </Header.Content>
+        </Header>
       </div>
     );
   }

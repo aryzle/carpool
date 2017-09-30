@@ -10,6 +10,7 @@ import Passenger from '../../Passenger';
 import Driver from './Driver';
 import './styles.css';
 import carSmall from '../../../static/car-small.svg';
+import carMedium from '../../../static/car-medium.svg';
 
 const passengerTarget = {
   canDrop(props, monitor) {
@@ -149,7 +150,7 @@ class CarRow extends Component {
               ribbon: 'right'
             }}
             className="CarRow-image"
-            src={carSmall}
+            src={car.seats > 4 ? carMedium : carSmall}
             alt="small car"
           />
           <div className="CarRow-center">
