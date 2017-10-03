@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { pick } from 'lodash/object'
 import uuid from 'uuid/v4'
-import { seatOptions } from '../shared'
+import { classOptions, genderOptions, seatOptions } from '../shared'
 
 export default class AddCar extends Component {
   static propTypes = {
@@ -20,6 +20,8 @@ export default class AddCar extends Component {
     address: '',
     city: '',
     state: '',
+    gender: '',
+    classYear: '',
     seats: 4,
     model: '',
     color: '',
@@ -93,6 +95,8 @@ export default class AddCar extends Component {
       city,
       address,
       state,
+      gender,
+      classYear,
       departureDateTime,
       returnDateTime,
       model,
@@ -155,6 +159,22 @@ export default class AddCar extends Component {
               placeholder="State* (e.g. VA, MD)"
               name="state"
               value={state}
+              onChange={this.handleChange}
+            />
+            <Form.Select
+              required
+              placeholder="Gender"
+              name="gender"
+              value={gender}
+              options={genderOptions}
+              onChange={this.handleChange}
+            />
+            <Form.Select
+              required
+              placeholder="Class"
+              name="classYear"
+              value={classYear}
+              options={classOptions}
               onChange={this.handleChange}
             />
             <Form.TextArea
