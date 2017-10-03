@@ -24,6 +24,8 @@ const PassengerCard = ({ passenger, eventId }) => {
     address,
     city,
     state,
+    gender,
+    classYear,
     earliestDepartureDateTime,
     latestReturnDateTime,
     info,
@@ -33,7 +35,10 @@ const PassengerCard = ({ passenger, eventId }) => {
   return (
     <Card>
       <Card.Content>
-        <Card.Header>{name}</Card.Header>
+        <Card.Header>
+          {name}
+          <span style={{ float: 'right' }}>{classYear}</span>
+        </Card.Header>
         <Card.Meta>
           {email}
           <br />

@@ -7,6 +7,8 @@ import moment from 'moment'
 import { ItemTypes } from '../../Constants'
 import PassengerCard from './Card'
 import chrisJPG from '../../static/chris.jpg'
+import adeJPG from '../../static/ade.jpg'
+import defaultUserJPG from '../../static/default-user.jpg'
 import './styles.css'
 
 const passengerSource = {
@@ -66,7 +68,11 @@ class Passenger extends Component {
   render() {
     const { connectDragSource, isDragging, inline, eventId } = this.props
     const { passengerData } = this.state
-    const { car, name, city, earliestDepartureDateTime } = passengerData
+    const { car, name, city, earliestDepartureDateTime, gender } = passengerData
+    let imgSrc = defaultUserJPG
+
+    if (gender === 'M') imgSrc = chrisJPG
+    if (gender === 'F') imgSrc = adeJPG
 
     return connectDragSource(
       <div
@@ -80,7 +86,7 @@ class Passenger extends Component {
         <Popup
           trigger={
             <Label image basic color={car ? 'teal' : 'blue'}>
-              <img src={chrisJPG} alt="chris" />
+              <img src={imgSrc} alt="chris" />
               {name}@{city}
               {!car && (
                 <Label.Detail>

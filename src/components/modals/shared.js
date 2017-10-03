@@ -49,7 +49,7 @@ export const stateOptions = [
   { key: 'WA', value: 'WA', text: 'Washington' },
   { key: 'WV', value: 'WV', text: 'West Virginia' },
   { key: 'WI', value: 'WI', text: 'Wisconsin' },
-  { key: 'WY', value: 'WY', text: 'Wyoming' },
+  { key: 'WY', value: 'WY', text: 'Wyoming' }
 ]
 
 export const seatOptions = [
@@ -61,4 +61,16 @@ export const seatOptions = [
   { key: 5, value: 5, text: '5' },
   { key: 6, value: 6, text: '6' },
   { key: 7, value: 7, text: '7' }
+]
+
+export const genderOptions = [
+  { key: 'M', value: 'M', text: 'M' },
+  { key: 'F', value: 'F', text: 'F' }
+]
+
+export const classOptions = [
+  { key: 'Freshman', value: 'Freshman', text: 'Freshman' },
+  { key: 'Sophomore', value: 'Sophomore', text: 'Sophomore' },
+  { key: 'Junior', value: 'Junior', text: 'Junior' },
+  { key: 'Senior', value: 'Senior', text: 'Senior' }
 ]

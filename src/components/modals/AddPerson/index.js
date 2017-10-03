@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker'
 import { omit } from 'lodash/object'
 import moment from 'moment'
 import uuid from 'uuid/v4'
+import { classOptions, genderOptions } from '../shared'
 
 export default class AddPerson extends Component {
   static propTypes = {
@@ -22,6 +23,8 @@ export default class AddPerson extends Component {
     address: '',
     city: '',
     state: '',
+    gender: '',
+    classYear: '',
     earliestDepartureDateTime: '',
     latestReturnDateTime: '',
     info: '',
@@ -97,6 +100,8 @@ export default class AddPerson extends Component {
       city,
       address,
       state,
+      gender,
+      classYear,
       earliestDepartureDateTime,
       latestReturnDateTime,
       info,
@@ -161,6 +166,22 @@ export default class AddPerson extends Component {
               placeholder="State* (e.g. VA, MD)"
               name="state"
               value={state}
+              onChange={this.handleChange}
+            />
+            <Form.Select
+              required
+              placeholder="Gender"
+              name="gender"
+              value={gender}
+              options={genderOptions}
+              onChange={this.handleChange}
+            />
+            <Form.Select
+              required
+              placeholder="Class"
+              name="classYear"
+              value={classYear}
+              options={classOptions}
               onChange={this.handleChange}
             />
             <Form.Field required>
