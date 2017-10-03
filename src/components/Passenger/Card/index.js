@@ -24,7 +24,6 @@ const PassengerCard = ({ passenger, eventId }) => {
     address,
     city,
     state,
-    gender,
     classYear,
     earliestDepartureDateTime,
     latestReturnDateTime,

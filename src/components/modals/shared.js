@@ -72,5 +72,7 @@ export const classOptions = [
   { key: 'Freshman', value: 'Freshman', text: 'Freshman' },
   { key: 'Sophomore', value: 'Sophomore', text: 'Sophomore' },
   { key: 'Junior', value: 'Junior', text: 'Junior' },
-  { key: 'Senior', value: 'Senior', text: 'Senior' }
+  { key: 'Senior', value: 'Senior', text: 'Senior' },
+  { key: 'Grad', value: 'Grad', text: 'Graduate Student' },
+  { key: 'Staff', value: 'Staff', text: 'Staff' }
 ]
