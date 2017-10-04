@@ -101,6 +101,7 @@ class Passenger extends Component {
             <PassengerCard passenger={passengerData} eventId={eventId} />
           }
           closeOnDocumentClick={false}
+          hideOnScroll
           on="click"
         />
       </div>

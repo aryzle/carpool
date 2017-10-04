@@ -37,16 +37,16 @@ export default class AddPerson extends Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
-    const { eventId, carId } = this.props
+    const { eventId, carId, person = {} } = this.props
     this.setState({ loading: true })
-    const newPersonId = uuid()
+    const personId = person.id || uuid()
     const earliestDepartureDateTime =
       Date.parse(this.state.earliestDepartureDateTime) || ''
     const latestReturnDateTime =
       Date.parse(this.state.latestReturnDateTime) || ''
     firebase
       .database()
-      .ref(`events/${eventId}/persons/${newPersonId}`)
+      .ref(`events/${eventId}/persons/${personId}`)
       .set({
         ...omit(this.state, [
           'earliestDepartureDateTime',
@@ -55,7 +55,7 @@ export default class AddPerson extends Component {
           'success',
           'error'
         ]),
-        id: newPersonId,
+        id: personId,
         car: carId || null,
         earliestDepartureDateTime,
         latestReturnDateTime
@@ -66,7 +66,7 @@ export default class AddPerson extends Component {
             .database()
             .ref(`events/${eventId}/cars/${carId}/passengers`)
             .update({
-              [newPersonId]: true
+              [personId]: true
             })
         }
       })
@@ -92,9 +92,15 @@ export default class AddPerson extends Component {
         ...person,
         earliestDepartureDateTime: person.earliestDepartureDateTime
           ? moment(person.earliestDepartureDateTime)
+              .local()
+              .format()
+              .slice(0, 19)
           : '',
         latestReturnDateTime: person.latestReturnDateTime
           ? moment(person.latestReturnDateTime)
+              .local()
+              .format()
+              .slice(0, 19)
           : ''
       })
     }

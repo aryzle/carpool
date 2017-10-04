@@ -1,11 +1,10 @@
-import React, { Component }  from 'react'
+import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import firebase from 'firebase'
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
-import DatePicker from 'react-datepicker'
 
 export default class CreateEvent extends Component {
-  state = {
+  static initialState = {
     adminName: '',
     adminEmail: '',
     eventName: '',
@@ -14,49 +13,81 @@ export default class CreateEvent extends Component {
     startDateTime: '',
     endDateTime: '',
     info: '',
+    loading: false,
     success: false,
     error: false,
     newEventId: ''
   }
 
+  state = CreateEvent.initialState
+
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleStartDateChange = date => this.setState({ startDateTime: date })
-  handleEndDateChange = date => this.setState({ endDateTime: date })
-
   handleSubmit = () => {
-    const { startDateTime: t1, endDateTime: t2, adminName, adminEmail, eventName, address, locationName } = this.state
-    const startDateTime = t1.valueOf()
-    const endDateTime = t2.valueOf()
+    this.setState({ loading: true })
+    const {
+      startDateTime: t1,
+      endDateTime: t2,
+      adminName,
+      adminEmail,
+      eventName,
+      address,
+      locationName
+    } = this.state
+    const startDateTime = Date.parse(t1) || ''
+    const endDateTime = Date.parse(t2) || ''
 
-    const newEventRef = firebase.database().ref('/events').push()
-    newEventRef.set({
-      id: newEventRef.key,
-      name: eventName,
-      location: {
-        address,
-        name: locationName
-      },
-      startDateTime,
-      endDateTime,
-      admin: {
-        name: adminName,
-        email: adminEmail
-      }
-    })
-    .then(() => this.setState({ success: true }))
-    .then(() => this.setState({ newEventId: newEventRef.key}))
-    .catch(e => {
-      console.log(e)
-      this.setState({ error: true })
-    })
+    const newEventRef = firebase
+      .database()
+      .ref('/events')
+      .push()
+    newEventRef
+      .set({
+        id: newEventRef.key,
+        name: eventName,
+        location: {
+          address,
+          name: locationName
+        },
+        startDateTime,
+        endDateTime,
+        admin: {
+          name: adminName,
+          email: adminEmail
+        }
+      })
+      .then(() => {
+        this.setState({
+          ...CreateEvent.initialState,
+          success: true
+        })
+        setTimeout(() => this.setState({ success: false }), 3000)
+      })
+      .then(() => this.setState({ newEventId: newEventRef.key }))
+      .catch(e => {
+        console.log(e)
+        this.setState({ error: true })
+        setTimeout(() => this.setState({ error: false }), 6000)
+      })
   }
 
   render() {
-    const { adminName, adminEmail, eventName, address, locationName, startDateTime, endDateTime, success, error, newEventId } = this.state
+    const {
+      adminName,
+      adminEmail,
+      eventName,
+      address,
+      locationName,
+      startDateTime,
+      endDateTime,
+      loading,
+      success,
+      error,
+      newEventId
+    } = this.state
 
     return (
-      <div className='login-form'>
+      <div className="login-form">
         {/*
           Heads up! The styles below are necessary for the correct render of this example.
           You can do same with CSS, the main idea is that all the elements up to the `Grid`
@@ -71,7 +102,7 @@ export default class CreateEvent extends Component {
         `}</style>
         <Grid
           textAlign="center"
-          style={{ height: "100%" }}
+          style={{ height: '100%' }}
           verticalAlign="middle"
         >
           <Grid.Column style={{ maxWidth: 450 }}>
@@ -79,7 +110,12 @@ export default class CreateEvent extends Component {
             <Header as="h2" color="teal" textAlign="center">
               Create your event
             </Header>
-            <Form onSubmit={this.handleSubmit} size="large" success={success} error={error}>
+            <Form
+              onSubmit={this.handleSubmit}
+              size="large"
+              success={success}
+              error={error}
+            >
               <Segment stacked>
                 <Header as="h3" color="teal">
                   About you
@@ -126,16 +162,25 @@ export default class CreateEvent extends Component {
                   value={locationName}
                   onChange={this.handleChange}
                 />
-                <Form.Field required>
-                  <label>Start time</label>
-                  <DatePicker onChange={this.handleStartDateChange} selected={startDateTime} shouldCloseOnSelect={false} timeIntervals={15} dateFormat="LLL" showTimeSelect />
-                </Form.Field>
-                <Form.Field required>
-                  <label>End time</label>
-                  <DatePicker onChange={this.handleEndDateChange} selected={endDateTime} shouldCloseOnSelect={false} timeIntervals={15} dateFormat="LLL" showTimeSelect />
-                </Form.Field>
+                <Form.Input
+                  required
+                  label="Start time"
+                  type="datetime-local"
+                  name="startDateTime"
+                  value={startDateTime}
+                  onChange={this.handleChange}
+                />
+                <Form.Input
+                  label="End time"
+                  type="datetime-local"
+                  name="endDateTime"
+                  value={endDateTime}
+                  onChange={this.handleChange}
+                />
 
-                <Button color="teal" fluid size="large">Create</Button>
+                <Button color="teal" fluid size="large" loading={loading}>
+                  Create
+                </Button>
 
                 <Message
                   success
