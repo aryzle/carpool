@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import { pick } from 'lodash/object'
 import uuid from 'uuid/v4'
 import { classOptions, genderOptions, seatOptions } from '../shared'
@@ -13,7 +11,7 @@ export default class AddCar extends Component {
     eventId: PropTypes.string
   }
 
-  state = {
+  static initialState = {
     name: '',
     email: '',
     phone: '',
@@ -30,22 +28,22 @@ export default class AddCar extends Component {
     returnDateTime: '',
     label: '',
     info: '',
+    loading: false,
     success: false,
     error: false
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+  state = AddCar.initialState
 
-  handleDepartureDateChange = date => this.setState({ departureDateTime: date })
-  handleReturnDateChange = date => this.setState({ returnDateTime: date })
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
     const { eventId } = this.props
+    this.setState({ loading: true })
     const newPersonId = uuid()
     const newCarId = uuid()
-    const departureDateTime = this.state.departureDateTime.valueOf()
-    const returnDateTime = this.state.returnDateTime.valueOf()
-    console.log(departureDateTime)
+    const departureDateTime = Date.parse(this.state.departureDateTime) || ''
+    const returnDateTime = Date.parse(this.state.returnDateTime) || ''
     firebase
       .database()
       .ref(`events/${eventId}/persons/${newPersonId}`)
@@ -56,7 +54,9 @@ export default class AddCar extends Component {
           'phone',
           'address',
           'city',
-          'state'
+          'state',
+          'gender',
+          'classYear'
         ]),
         car: newCarId,
         id: newPersonId
@@ -79,11 +79,34 @@ export default class AddCar extends Component {
             returnDateTime
           })
       })
-      .then(this.setState({ success: true }))
+      .then(() => {
+        this.setState({
+          ...AddCar.initialState,
+          success: true
+        })
+        setTimeout(() => this.setState({ success: false }), 3000)
+      })
       .catch(e => {
         console.log(e)
-        this.setState({ error: true })
+        this.setState({ error: true, loading: false })
+        setTimeout(() => this.setState({ error: false }), 6000)
       })
+  }
+
+  componentWillUpdate() {
+    this.fixBody()
+  }
+
+  componentDidUpdate() {
+    this.fixBody()
+  }
+
+  //TODO: track new release for fix
+  fixBody() {
+    const anotherModal = document.getElementsByClassName('ui page modals')
+      .length
+    if (anotherModal > 0)
+      document.body.classList.add('scrolling', 'dimmable', 'dimmed')
   }
 
   render() {
@@ -104,6 +127,7 @@ export default class AddCar extends Component {
       licensePlate,
       label,
       info,
+      loading,
       success,
       error
     } = this.state
@@ -222,29 +246,25 @@ export default class AddCar extends Component {
               value={label}
               onChange={this.handleChange}
             />
-            <Form.Field>
-              <label>Do you need to leave by a certain time?</label>
-              <DatePicker
-                onChange={this.handleDepartureDateChange}
-                selected={departureDateTime}
-                shouldCloseOnSelect={false}
-                timeIntervals={15}
-                dateFormat="LLL"
-                showTimeSelect
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Is there a time you need to be back by?</label>
-              <DatePicker
-                onChange={this.handleReturnDateChange}
-                selected={returnDateTime}
-                shouldCloseOnSelect={false}
-                timeIntervals={15}
-                dateFormat="LLL"
-                showTimeSelect
-              />
-            </Form.Field>
-            <Button type="submit">Submit</Button>
+            <Form.Input
+              required
+              label="Do you need to leave by a certain time?"
+              type="datetime-local"
+              name="departureDateTime"
+              value={departureDateTime}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              required
+              label="Is there a time you need to be back by?"
+              type="datetime-local"
+              name="returnDateTime"
+              value={returnDateTime}
+              onChange={this.handleChange}
+            />
+            <Button type="submit" loading={loading}>
+              Submit
+            </Button>
             <Message
               success
               header="Form Completed"

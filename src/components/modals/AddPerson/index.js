@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import { Button, Form, Message, Modal } from 'semantic-ui-react'
-import DatePicker from 'react-datepicker'
 import { omit } from 'lodash/object'
 import moment from 'moment'
 import uuid from 'uuid/v4'
@@ -16,7 +15,7 @@ export default class AddPerson extends Component {
     person: PropTypes.object
   }
 
-  state = {
+  static initialState = {
     name: '',
     email: '',
     phone: '',
@@ -28,21 +27,23 @@ export default class AddPerson extends Component {
     earliestDepartureDateTime: '',
     latestReturnDateTime: '',
     info: '',
+    loading: false,
     success: false,
     error: false
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+  state = AddPerson.initialState
 
-  handleDepDateChange = date =>
-    this.setState({ earliestDepartureDateTime: date })
-  handleRetDateChange = date => this.setState({ latestReturnDateTime: date })
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
     const { eventId, carId } = this.props
+    this.setState({ loading: true })
     const newPersonId = uuid()
-    const earliestDepartureDateTime = this.state.earliestDepartureDateTime.valueOf()
-    const latestReturnDateTime = this.state.latestReturnDateTime.valueOf()
+    const earliestDepartureDateTime =
+      Date.parse(this.state.earliestDepartureDateTime) || ''
+    const latestReturnDateTime =
+      Date.parse(this.state.latestReturnDateTime) || ''
     firebase
       .database()
       .ref(`events/${eventId}/persons/${newPersonId}`)
@@ -50,6 +51,7 @@ export default class AddPerson extends Component {
         ...omit(this.state, [
           'earliestDepartureDateTime',
           'latestReturnDateTime',
+          'loading',
           'success',
           'error'
         ]),
@@ -68,10 +70,17 @@ export default class AddPerson extends Component {
             })
         }
       })
-      .then(() => this.setState({ success: true }))
+      .then(() => {
+        this.setState({
+          ...AddPerson.initialState,
+          success: true
+        })
+        setTimeout(() => this.setState({ success: false }), 3000)
+      })
       .catch(e => {
         console.log(e)
-        this.setState({ error: true })
+        this.setState({ error: true, loading: false })
+        setTimeout(() => this.setState({ error: false }), 6000)
       })
   }
 
@@ -91,6 +100,22 @@ export default class AddPerson extends Component {
     }
   }
 
+  componentWillUpdate() {
+    this.fixBody()
+  }
+
+  componentDidUpdate() {
+    this.fixBody()
+  }
+
+  //TODO: track new release for fix
+  fixBody() {
+    const anotherModal = document.getElementsByClassName('ui page modals')
+      .length
+    if (anotherModal > 0)
+      document.body.classList.add('scrolling', 'dimmable', 'dimmed')
+  }
+
   render() {
     const { trigger } = this.props
     const {
@@ -105,6 +130,7 @@ export default class AddPerson extends Component {
       earliestDepartureDateTime,
       latestReturnDateTime,
       info,
+      loading,
       success,
       error
     } = this.state
@@ -184,35 +210,30 @@ export default class AddPerson extends Component {
               options={classOptions}
               onChange={this.handleChange}
             />
-            <Form.Field required>
-              <label>When is the earliest you could leave?</label>
-              <DatePicker
-                onChange={this.handleDepDateChange}
-                selected={earliestDepartureDateTime}
-                shouldCloseOnSelect={false}
-                timeIntervals={15}
-                dateFormat="LLL"
-                showTimeSelect
-              />
-            </Form.Field>
-            <Form.Field required>
-              <label>Is there a time you need to be back by?</label>
-              <DatePicker
-                onChange={this.handleRetDateChange}
-                selected={latestReturnDateTime}
-                shouldCloseOnSelect={false}
-                timeIntervals={15}
-                dateFormat="LLL"
-                showTimeSelect
-              />
-            </Form.Field>
+            <Form.Input
+              required
+              label="When is the earliest you could leave?"
+              type="datetime-local"
+              name="earliestDepartureDateTime"
+              value={earliestDepartureDateTime}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              label="Is there a time you need to be back by?"
+              type="datetime-local"
+              name="latestReturnDateTime"
+              value={latestReturnDateTime}
+              onChange={this.handleChange}
+            />
             <Form.TextArea
               placeholder="Is there anything more you'd like us to know?"
               name="info"
               value={info}
               onChange={this.handleChange}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" loading={loading}>
+              Submit
+            </Button>
             <Message
               success
               header="Submit Completed"

@@ -100,6 +100,7 @@ class Passenger extends Component {
           content={
             <PassengerCard passenger={passengerData} eventId={eventId} />
           }
+          closeOnDocumentClick={false}
           on="click"
         />
       </div>
