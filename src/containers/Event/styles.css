@@ -1,6 +1,11 @@
 .Cars-Waitlist-Container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 100%;
+}
+
+.sticky {
+  position: fixed;
+  right: 75px;
 }
