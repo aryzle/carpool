@@ -87,7 +87,9 @@ class Passenger extends Component {
           trigger={
             <Label image basic color={car ? 'teal' : 'blue'}>
               <img src={imgSrc} alt="chris" />
-              {name}@{city}
+              <div className="ellipsis">
+                {name}@{city}
+              </div>
               {!car && (
                 <Label.Detail>
                   {earliestDepartureDateTime

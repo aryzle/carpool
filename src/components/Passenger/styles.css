@@ -1,3 +1,11 @@
 .PassengerInfo {
-    padding: 5px;
+  padding: 5px;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 135px;
+  white-space: nowrap;
+  overflow: hidden;
 }
