@@ -182,8 +182,9 @@ class CarRow extends Component {
               <Button
                 icon="edit"
                 color="orange"
-                size="mini"
+                size="small"
                 attached="right"
+                className="no-shadow"
                 style={editStyles}
                 inverted
               />
@@ -192,8 +193,9 @@ class CarRow extends Component {
           <Button
             icon="delete"
             color="red"
-            size="mini"
+            size="small"
             attached="right"
+            className="no-shadow"
             style={deleteStyles}
             onClick={this.showConfirm}
             inverted

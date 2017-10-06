@@ -17,16 +17,23 @@ export default class Cars extends Component {
 
   componentDidMount() {
     const { eventId } = this.props
-    const eventRef = firebase.database().ref().child('events').child(eventId)
+    const eventRef = firebase
+      .database()
+      .ref()
+      .child('events')
+      .child(eventId)
     const carRef = eventRef.child('cars')
 
     carRef.on('value', snap => {
       const carData = snap.val() || {}
       const carIds = Object.keys(carData)
-      this.setState({
-        carData,
-        carIds
-      }, () => console.log('Cars state', this.state))
+      this.setState(
+        {
+          carData,
+          carIds
+        },
+        () => console.log('Cars state', this.state)
+      )
     })
   }
 
@@ -35,12 +42,14 @@ export default class Cars extends Component {
     const { carIds, carData } = this.state
     return (
       <div className="Cars">
-        <Header as="h2">Cars</Header>
+        <Header as="h2">{carIds.length} Cars</Header>
         <AddCar eventId={eventId} />
         <Item.Group>
-          {carIds.map(id => <CarRow key={id} car={carData[id]} eventId={eventId} />)}
+          {carIds.map(id => (
+            <CarRow key={id} car={carData[id]} eventId={eventId} />
+          ))}
         </Item.Group>
       </div>
-    );
+    )
   }
 }

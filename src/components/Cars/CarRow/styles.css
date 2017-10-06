@@ -26,3 +26,7 @@
   padding: 0 20px;
   flex-grow: 4;
 }
+
+.ui.icon.small.inverted.attached.no-shadow {
+  box-shadow: none !important;
+}
