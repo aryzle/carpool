@@ -1,23 +1,28 @@
-import React from 'react';
-import { Card, Icon, Label } from 'semantic-ui-react';
-import moment from 'moment';
+import React from 'react'
+import { Card, Icon, Label } from 'semantic-ui-react'
+import moment from 'moment'
+import AddPerson from '../../../../modals/AddPerson/index'
 
-const DriverCard = ({ passenger }) => {
+const DriverCard = ({ passenger, eventId }) => {
   const {
     name,
     email,
     address,
     city,
     state,
+    classYear,
     earliestDepartureDateTime,
     latestReturnDateTime,
     info
-  } = passenger;
+  } = passenger
 
   return (
     <Card>
       <Card.Content>
-        <Card.Header>{name}</Card.Header>
+        <Card.Header>
+          {name}
+          <span style={{ float: 'right' }}>{classYear}</span>
+        </Card.Header>
         <Card.Meta>
           {email}
           <br />
@@ -52,9 +57,16 @@ const DriverCard = ({ passenger }) => {
       <Card.Content extra>
         <Icon name="user" />
         {info}
+        <AddPerson
+          eventId={eventId}
+          trigger={
+            <Icon name="edit" color="yellow" style={{ float: 'right' }} link />
+          }
+          person={passenger}
+        />
       </Card.Content>
     </Card>
-  );
-};
+  )
+}
 
-export default DriverCard;
+export default DriverCard

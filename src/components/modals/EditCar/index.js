@@ -3,24 +3,17 @@ import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
 import { pick } from 'lodash/object'
-import uuid from 'uuid/v4'
-import { classOptions, genderOptions, seatOptions } from '../shared'
+import moment from 'moment'
+import { seatOptions } from '../shared'
 
-export default class AddCar extends Component {
+export default class EditCar extends Component {
   static propTypes = {
-    eventId: PropTypes.string
+    eventId: PropTypes.string.isRequired,
+    car: PropTypes.object.isRequired,
+    trigger: PropTypes.element.isRequired
   }
 
   static initialState = {
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    gender: '',
-    classYear: '',
-    personInfo: '',
     seats: 4,
     model: '',
     color: '',
@@ -28,69 +21,39 @@ export default class AddCar extends Component {
     departureDateTime: '',
     returnDateTime: '',
     label: '',
-    carInfo: '',
+    info: '',
     loading: false,
     success: false,
     error: false
   }
 
-  state = AddCar.initialState
+  state = EditCar.initialState
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
-    const { eventId } = this.props
-    const {
-      departureDateTime: t1,
-      returnDateTime: t2,
-      personInfo,
-      carInfo
-    } = this.state
+    const { eventId, car } = this.props
     this.setState({ loading: true })
-    const newPersonId = uuid()
-    const newCarId = uuid()
-    const departureDateTime = Date.parse(t1) || ''
-    const returnDateTime = Date.parse(t2) || ''
+    const departureDateTime = Date.parse(this.state.departureDateTime) || ''
+    const returnDateTime = Date.parse(this.state.returnDateTime) || ''
     firebase
       .database()
-      .ref(`events/${eventId}/persons/${newPersonId}`)
-      .set({
+      .ref(`events/${eventId}/cars/${car.id}`)
+      .update({
         ...pick(this.state, [
-          'name',
-          'email',
-          'phone',
-          'address',
-          'city',
-          'state',
-          'gender',
-          'classYear'
+          'seats',
+          'model',
+          'color',
+          'licensePlate',
+          'label',
+          'info'
         ]),
-        car: newCarId,
-        id: newPersonId,
-        info: personInfo
-      })
-      .then(() => {
-        firebase
-          .database()
-          .ref(`events/${eventId}/cars/${newCarId}`)
-          .set({
-            ...pick(this.state, [
-              'seats',
-              'model',
-              'color',
-              'licensePlate',
-              'label'
-            ]),
-            id: newCarId,
-            driver: newPersonId,
-            departureDateTime,
-            returnDateTime,
-            info: carInfo
-          })
+        departureDateTime,
+        returnDateTime
       })
       .then(() => {
         this.setState({
-          ...AddCar.initialState,
+          ...EditCar.initialState,
           success: true
         })
         setTimeout(() => this.setState({ success: false }), 3000)
@@ -100,6 +63,28 @@ export default class AddCar extends Component {
         this.setState({ error: true, loading: false })
         setTimeout(() => this.setState({ error: false }), 6000)
       })
+  }
+
+  componentDidMount() {
+    const { car } = this.props
+
+    if (car) {
+      this.setState({
+        ...car,
+        departureDateTime: car.departureDateTime
+          ? moment(car.departureDateTime)
+              .local()
+              .format()
+              .slice(0, 19)
+          : '',
+        returnDateTime: car.returnDateTime
+          ? moment(car.returnDateTime)
+              .local()
+              .format()
+              .slice(0, 19)
+          : ''
+      })
+    }
   }
 
   componentWillUpdate() {
@@ -121,15 +106,6 @@ export default class AddCar extends Component {
   render() {
     const { trigger } = this.props
     const {
-      name,
-      email,
-      phone,
-      city,
-      address,
-      state,
-      gender,
-      classYear,
-      personInfo,
       seats,
       departureDateTime,
       returnDateTime,
@@ -137,7 +113,7 @@ export default class AddCar extends Component {
       color,
       licensePlate,
       label,
-      carInfo,
+      info,
       loading,
       success,
       error
@@ -147,7 +123,7 @@ export default class AddCar extends Component {
         trigger={trigger || <Button color="teal">Add your Car</Button>}
         closeIcon
       >
-        <Modal.Header>Add Car</Modal.Header>
+        <Modal.Header>Edit Car</Modal.Header>
         <Modal.Content form>
           <Form
             onSubmit={this.handleSubmit}
@@ -155,72 +131,6 @@ export default class AddCar extends Component {
             success={success}
             error={error}
           >
-            <Header as="h3">
-              <Icon name="user" />
-              <Header.Content>About you</Header.Content>
-            </Header>
-            <Form.Input
-              required
-              placeholder="Name*"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              required
-              placeholder="Email*"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              placeholder="Phone"
-              name="phone"
-              value={phone}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              required
-              placeholder="City*"
-              name="city"
-              value={city}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              placeholder="Address"
-              name="address"
-              value={address}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              required
-              placeholder="State* (e.g. VA, MD)"
-              name="state"
-              value={state}
-              onChange={this.handleChange}
-            />
-            <Form.Select
-              required
-              placeholder="Gender"
-              name="gender"
-              value={gender}
-              options={genderOptions}
-              onChange={this.handleChange}
-            />
-            <Form.Select
-              required
-              placeholder="Class"
-              name="classYear"
-              value={classYear}
-              options={classOptions}
-              onChange={this.handleChange}
-            />
-            <Form.TextArea
-              placeholder="Is there anything more you'd like us to know?"
-              name="personInfo"
-              value={personInfo}
-              onChange={this.handleChange}
-            />
             <Header as="h3">
               <Icon name="car" />
               <Header.Content>About your car</Header.Content>
@@ -278,8 +188,8 @@ export default class AddCar extends Component {
             />
             <Form.TextArea
               placeholder="Is there anything more you'd like us to know about your car?"
-              name="carInfo"
-              value={carInfo}
+              name="info"
+              value={info}
               onChange={this.handleChange}
             />
             <Button type="submit" loading={loading}>

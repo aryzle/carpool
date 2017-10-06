@@ -6,6 +6,7 @@ import { Button, Confirm, Icon, Image, Segment } from 'semantic-ui-react'
 import moment from 'moment'
 import { ItemTypes } from '../../../Constants'
 import AddPerson from '../../modals/AddPerson'
+import EditCar from '../../modals/EditCar'
 import Passenger from '../../Passenger'
 import Driver from './Driver'
 import './styles.css'
@@ -174,12 +175,26 @@ class CarRow extends Component {
               />
             ))}
           </div>
+          <EditCar
+            eventId={eventId}
+            car={car}
+            trigger={
+              <Button
+                icon="edit"
+                color="orange"
+                size="mini"
+                attached="right"
+                style={editStyles}
+                inverted
+              />
+            }
+          />
           <Button
             icon="delete"
             color="red"
             size="mini"
             attached="right"
-            style={styles}
+            style={deleteStyles}
             onClick={this.showConfirm}
             inverted
           />
@@ -197,11 +212,19 @@ class CarRow extends Component {
 }
 
 const mql = window.matchMedia('(max-width: 425px)')
-const styles = {
-  height: '30px',
+const editStyles = {
+  padding: '6px',
+  position: 'absolute',
+  right: mql.matches ? null : 35,
+  left: mql.matches ? 35 : null,
+  borderRadius: 0
+}
+const deleteStyles = {
+  padding: '6px',
   position: 'absolute',
   right: mql.matches ? null : 10,
-  left: mql.matches ? 10 : null
+  left: mql.matches ? 10 : null,
+  borderRadius: 0
 }
 
 export default DropTarget(ItemTypes.PASSENGER, passengerTarget, collect)(CarRow)

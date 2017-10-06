@@ -52,8 +52,9 @@ export default class Driver extends Component {
             </Label>
           }
           content={<DriverCard passenger={driverData} eventId={eventId} />}
-          on="click"
+          closeOnDocumentClick={false}
           hideOnScroll
+          on="click"
         />
       </div>
     )

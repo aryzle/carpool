@@ -107,10 +107,8 @@ class Waitlist extends Component {
   }
 }
 
-const mql = window.matchMedia('(max-width: 425px)')
-
 const style = {
-  height: mql.matches ? '75%' : '85%',
+  height: 'calc(75vh - 125px)',
   overflowY: 'auto',
   marginTop: '15px',
   textAlign: 'left'

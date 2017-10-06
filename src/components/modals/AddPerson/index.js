@@ -123,7 +123,7 @@ export default class AddPerson extends Component {
   }
 
   render() {
-    const { trigger } = this.props
+    const { trigger, person } = this.props
     const {
       name,
       email,
@@ -152,7 +152,9 @@ export default class AddPerson extends Component {
         }
         closeIcon
       >
-        <Modal.Header>Join the Carpool!</Modal.Header>
+        <Modal.Header>
+          {person ? 'Edit Person' : 'Join the Carpool!'}
+        </Modal.Header>
         <Modal.Content form>
           <Form
             onSubmit={this.handleSubmit}
