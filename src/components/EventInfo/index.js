@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Divider, Header, Icon } from 'semantic-ui-react'
+import { Dimmer, Divider, Header, Icon, Loader } from 'semantic-ui-react'
 import moment from 'moment'
 import './styles.css'
 
@@ -42,9 +42,13 @@ export default class EventInfo extends Component {
   render() {
     const { eventData, routeTo404 } = this.state
     const { location = {} } = eventData
+
     return (
       <div className="EventInfo">
         {routeTo404 && <Redirect to="/404" />}
+        <Dimmer active={!Object.keys(eventData).length}>
+          <Loader inverted content="loading" />
+        </Dimmer>
         <Header as="h1" content={eventData.name} />
         <Divider />
         <Header as="h3">
