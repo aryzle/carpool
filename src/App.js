@@ -17,6 +17,7 @@ class App extends Component {
           <Route path="/login" component={LoginForm} />
           <Route exact path="/e" component={CreateEvent} />
           <Route path="/e/:eventId" component={Event} />
+          <Route path="/404" component={() => <h1>Page Not Found</h1>} />
         </div>
       </Router>
     )

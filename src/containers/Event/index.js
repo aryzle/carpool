@@ -21,10 +21,7 @@ const Event = ({ match }) => (
       <div className="Cars-Waitlist-Container">
         <Cars eventId={match.params.eventId} />
         <div style={waitlistContainerStyle}>
-          <Segment
-            raised
-            style={{ height: '75vh', position: 'sticky', top: '55px' }}
-          >
+          <Segment raised style={segmentStyle}>
             <Waitlist eventId={match.params.eventId} />
           </Segment>
         </div>
@@ -36,6 +33,12 @@ const Event = ({ match }) => (
 const waitlistContainerStyle = {
   padding: '15px',
   flexGrow: 1
+}
+
+const segmentStyle = {
+  height: '75vh',
+  position: 'sticky',
+  top: '55px'
 }
 
 export default DragDropContext(HTML5Backend)(Event)

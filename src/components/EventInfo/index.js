@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import { Divider, Header, Icon } from 'semantic-ui-react'
@@ -12,7 +13,8 @@ export default class EventInfo extends Component {
 
   state = {
     eventData: {},
-    portalOpen: false
+    portalOpen: false,
+    routeTo404: false
   }
 
   componentDidMount() {
@@ -24,20 +26,25 @@ export default class EventInfo extends Component {
       .child(eventId)
     eventRef.on('value', snap => {
       const eventData = snap.val()
-      this.setState(
-        {
-          eventData
-        },
-        () => console.log('EventInfo state', this.state)
-      )
+      if (!eventData) {
+        this.setState({ routeTo404: true })
+      } else {
+        this.setState(
+          {
+            eventData
+          },
+          () => console.log('EventInfo state', this.state)
+        )
+      }
     })
   }
 
   render() {
-    const { eventData } = this.state
+    const { eventData, routeTo404 } = this.state
     const { location = {} } = eventData
     return (
       <div className="EventInfo">
+        {routeTo404 && <Redirect to="/404" />}
         <Header as="h1" content={eventData.name} />
         <Divider />
         <Header as="h3">
