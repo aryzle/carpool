@@ -24,12 +24,9 @@ export default class Driver extends Component {
     const personRef = eventRef.child('persons').child(driverId)
     personRef.on('value', snap => {
       const driverData = snap.val()
-      this.setState(
-        {
-          driverData
-        },
-        () => console.log('Driver state', this.state)
-      )
+      this.setState({
+        driverData
+      })
     })
   }
 

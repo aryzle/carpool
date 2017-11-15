@@ -48,12 +48,9 @@ class Passenger extends Component {
       .ref(`events/${eventId}/persons/${passengerId}`)
     personRef.on('value', snap => {
       const passengerData = snap.val()
-      this.setState(
-        {
-          passengerData
-        },
-        () => console.log('Passenger state', this.state)
-      )
+      this.setState({
+        passengerData
+      })
     })
   }
 
@@ -86,7 +83,7 @@ class Passenger extends Component {
         <Popup
           trigger={
             <Label image basic color={car ? 'teal' : 'blue'}>
-              <img src={imgSrc} alt="chris" />
+              <img src={imgSrc} alt="image" />
               <div className="ellipsis">
                 {name}@{city}
               </div>

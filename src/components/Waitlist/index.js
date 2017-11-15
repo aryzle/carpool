@@ -60,9 +60,13 @@ class Waitlist extends Component {
       const personArr = normToArr({
         ids: Object.keys(personData),
         data: personData
-      }).sort(
-        (a, b) => a.earliestDepartureDateTime > b.earliestDepartureDateTime
-      )
+      }).sort((a, b) => {
+        if (!a.earliestDepartureDateTime) return -1
+        if (!b.earliestDepartureDateTime) return 1
+        if (a.earliestDepartureDateTime < b.earliestDepartureDateTime) return -1
+        if (b.earliestDepartureDateTime < a.earliestDepartureDateTime) return 1
+        return 0
+      })
       this.setState(
         {
           personData,

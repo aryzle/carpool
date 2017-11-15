@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import { Button, Confirm, Icon, Image, Segment } from 'semantic-ui-react'
+import { Button, Confirm, Icon, Image, Label, Segment } from 'semantic-ui-react'
 import moment from 'moment'
 import { ItemTypes } from '../../../Constants'
 import AddPerson from '../../modals/AddPerson'
@@ -124,90 +124,86 @@ class CarRow extends Component {
       driver,
       departureDateTime,
       returnDateTime,
-      label
+      label,
+      seats
     } = car
 
     return connectDropTarget(
       <div
         className="CarRow"
-        style={{
-          backgroundColor: isOver && canDrop && '#EEE'
-        }}
+        style={{ backgroundColor: isOver && canDrop && '#EEE' }}
       >
-        <Segment
-          raised
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            backgroundColor: 'inherit',
-            margin: '5px 0'
-          }}
-        >
-          <Image
-            label={{
+        {seats <= Object.keys(passengers).length && (
+          <Label className="CarRow-full" size="tiny" color="red" ribbon>
+            Full
+          </Label>
+        )}
+        <Image
+          label={
+            !!label && {
               color: 'teal',
               content: label,
               size: 'small',
               ribbon: 'right'
-            }}
-            className="CarRow-image"
-            src={car.seats > 4 ? carMedium : carSmall}
-            alt="small car"
-          />
-          <div className="CarRow-center">
-            <p className="CarRow-center-time">{`Leaving at: ${departureDateTime
-              ? `${moment(departureDateTime).format('MMM Do, h:mm a')}`
-              : 'open'}`}</p>
-            <p className="CarRow-center-time">{`Returning by: ${returnDateTime
-              ? `${moment(returnDateTime).format('MMM Do, h:mm a')}`
-              : 'open'}`}</p>
-            <Driver driverId={driver} eventId={eventId} />
-            {this.renderRiderIcons(car)}
-          </div>
-          <div className="CarRow-right">
-            <p>Passengers</p>
-            {Object.keys(passengers).map(passengerId => (
-              <Passenger
-                key={passengerId}
-                passengerId={passengerId}
-                carId={car.id}
-                eventId={eventId}
-              />
-            ))}
-          </div>
-          <EditCar
-            eventId={eventId}
-            car={car}
-            trigger={
-              <Button
-                icon="edit"
-                color="orange"
-                size="small"
-                attached="right"
-                className="no-shadow"
-                style={editStyles}
-                inverted
-              />
             }
-          />
-          <Button
-            icon="delete"
-            color="red"
-            size="small"
-            attached="right"
-            className="no-shadow"
-            style={deleteStyles}
-            onClick={this.showConfirm}
-            inverted
-          />
-          <Confirm
-            open={showConfirm}
-            content="Are you sure? The driver will also be deleted and all of the passengers will be notified and moved to the Waitlist."
-            confirmButton="Delete"
-            onCancel={this.handleCancel}
-            onConfirm={this.deleteCar}
-          />
-        </Segment>
+          }
+          className="CarRow-image"
+          src={car.seats > 4 ? carMedium : carSmall}
+          alt="car"
+        />
+        <div className="CarRow-center">
+          <p className="CarRow-center-time">{`Leaving at: ${departureDateTime
+            ? `${moment(departureDateTime).format('MMM Do, h:mm a')}`
+            : 'open'}`}</p>
+          <p className="CarRow-center-time">{`Returning by: ${returnDateTime
+            ? `${moment(returnDateTime).format('MMM Do, h:mm a')}`
+            : 'open'}`}</p>
+          <Driver driverId={driver} eventId={eventId} />
+          {this.renderRiderIcons(car)}
+        </div>
+        <div className="CarRow-right">
+          <p>Passengers</p>
+          {Object.keys(passengers).map(passengerId => (
+            <Passenger
+              key={passengerId}
+              passengerId={passengerId}
+              carId={car.id}
+              eventId={eventId}
+            />
+          ))}
+        </div>
+        <EditCar
+          eventId={eventId}
+          car={car}
+          trigger={
+            <Button
+              icon="edit"
+              color="orange"
+              size={mql.matches ? 'big' : 'small'}
+              attached="right"
+              className="no-shadow"
+              style={editStyles}
+              inverted
+            />
+          }
+        />
+        <Button
+          icon="delete"
+          color="red"
+          size={mql.matches ? 'big' : 'small'}
+          attached="right"
+          className="no-shadow"
+          style={deleteStyles}
+          onClick={this.showConfirm}
+          inverted
+        />
+        <Confirm
+          open={showConfirm}
+          content="Are you sure? The driver will also be deleted and all of the passengers will be notified and moved to the Waitlist."
+          confirmButton="Delete"
+          onCancel={this.handleCancel}
+          onConfirm={this.deleteCar}
+        />
       </div>
     )
   }
@@ -218,7 +214,7 @@ const editStyles = {
   padding: '6px',
   position: 'absolute',
   right: mql.matches ? null : 35,
-  left: mql.matches ? 35 : null,
+  left: mql.matches ? 47 : null,
   borderRadius: 0
 }
 const deleteStyles = {
