@@ -83,7 +83,7 @@ class Passenger extends Component {
         <Popup
           trigger={
             <Label image basic color={car ? 'teal' : 'blue'}>
-              <img src={imgSrc} alt="image" />
+              <img src={imgSrc} alt={name} />
               <div className="ellipsis">
                 {name}@{city}
               </div>
