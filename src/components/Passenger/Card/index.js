@@ -2,7 +2,7 @@ import React from 'react'
 import firebase from 'firebase'
 import { Card, Icon, Label } from 'semantic-ui-react'
 import moment from 'moment'
-import AddPerson from '../../modals/AddPerson/index'
+import PersonModal from '../../modals/Person'
 
 const handleDelete = (personId, carId, eventId) => () => {
   if (carId) {
@@ -79,7 +79,7 @@ const PassengerCard = ({ passenger, eventId }) => {
           onClick={handleDelete(passenger.id, car, eventId)}
           link
         />
-        <AddPerson
+        <PersonModal
           eventId={eventId}
           trigger={
             <Icon name="edit" color="yellow" style={{ float: 'right' }} link />

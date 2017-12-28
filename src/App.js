@@ -14,10 +14,10 @@ class App extends Component {
       <Router>
         <div className="App">
           <Route exact path="/" component={Home} />
-          <Route path="/login" component={LoginForm} />
+          <Route path="/login" render={LoginForm} />
           <Route exact path="/e" component={CreateEvent} />
           <Route path="/e/:eventId" component={Event} />
-          <Route path="/404" component={() => <h1>Page Not Found</h1>} />
+          <Route path="/404" render={() => <h1>Page Not Found</h1>} />
         </div>
       </Router>
     )

@@ -5,14 +5,16 @@ import firebase from 'firebase'
 import { Button, Confirm, Icon, Image, Label } from 'semantic-ui-react'
 import moment from 'moment'
 import { ItemTypes } from '../../../Constants'
-import AddPerson from '../../modals/AddPerson'
+import PersonModal from '../../modals/Person'
 import EditCar from '../../modals/EditCar'
 import Passenger from '../../Passenger'
+import AddFromWaitlist from '../../modals/AddFromWaitlist'
 import Driver from './Driver'
 import './styles.css'
 import carSmall from '../../../static/car-small.svg'
 import carMedium from '../../../static/car-medium.svg'
 
+const mql = window.matchMedia('(max-width: 425px)')
 const passengerTarget = {
   canDrop(props, monitor) {
     const { car: { id: carId, seats, passengers = {} } } = props
@@ -97,7 +99,7 @@ class CarRow extends Component {
 
     for (let i = 0; i < seatsLeft; i++) {
       emptySeats.push(
-        <AddPerson
+        <PersonModal
           key={i}
           eventId={eventId}
           trigger={<Icon size="big" color="teal" name="add user" link />}
@@ -105,6 +107,15 @@ class CarRow extends Component {
         />
       )
     }
+    mql.matches &&
+      emptySeats.push(
+        <AddFromWaitlist
+          key={seatsLeft}
+          eventId={eventId}
+          trigger={<Icon size="big" color="yellow" name="add user" link />}
+          carId={id}
+        />
+      )
 
     return (
       <div className="CarRow-passengers">
@@ -209,7 +220,6 @@ class CarRow extends Component {
   }
 }
 
-const mql = window.matchMedia('(max-width: 425px)')
 const editStyles = {
   padding: '6px',
   position: 'absolute',

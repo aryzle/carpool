@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Icon, Label } from 'semantic-ui-react'
 import moment from 'moment'
-import AddPerson from '../../../../modals/AddPerson/index'
+import PersonModal from '../../../../modals/Person'
 
 const DriverCard = ({ passenger, eventId }) => {
   const {
@@ -57,7 +57,7 @@ const DriverCard = ({ passenger, eventId }) => {
       <Card.Content extra>
         <Icon name="user" />
         {info}
-        <AddPerson
+        <PersonModal
           eventId={eventId}
           trigger={
             <Icon name="edit" color="yellow" style={{ float: 'right' }} link />

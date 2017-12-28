@@ -7,7 +7,7 @@ import moment from 'moment'
 import uuid from 'uuid/v4'
 import { classOptions, genderOptions } from '../shared'
 
-export default class AddPerson extends Component {
+export default class PersonModal extends Component {
   static propTypes = {
     eventId: PropTypes.string,
     trigger: PropTypes.element,
@@ -32,7 +32,7 @@ export default class AddPerson extends Component {
     error: false
   }
 
-  state = AddPerson.initialState
+  state = PersonModal.initialState
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
@@ -72,7 +72,7 @@ export default class AddPerson extends Component {
       })
       .then(() => {
         this.setState({
-          ...AddPerson.initialState,
+          ...PersonModal.initialState,
           success: true
         })
         setTimeout(() => this.setState({ success: false }), 3000)
@@ -143,13 +143,7 @@ export default class AddPerson extends Component {
 
     return (
       <Modal
-        trigger={
-          trigger || (
-            <Button inverted color="blue">
-              Need a ride?
-            </Button>
-          )
-        }
+        trigger={trigger || <Button color="yellow">Need a ride?</Button>}
         closeIcon
       >
         <Modal.Header>

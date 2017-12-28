@@ -3,7 +3,7 @@ import { DropTarget } from 'react-dnd'
 import PropTypes from 'prop-types'
 import firebase from 'firebase'
 import { Header, List } from 'semantic-ui-react'
-import AddPerson from '../modals/AddPerson'
+import PersonModal from '../modals/Person'
 import Passenger from '../Passenger'
 import { normToArr } from '../../utils/index'
 import { ItemTypes } from '../../Constants'
@@ -89,8 +89,8 @@ class Waitlist extends Component {
         }}
       >
         <Header as="h2">Waitlist</Header>
-        <AddPerson eventId={eventId} />
-        <div style={style}>
+        <PersonModal eventId={eventId} />
+        <div style={listContainerStyles}>
           <List>
             {personArr.map(({ id }) => (
               <List.Item key={`${id}-List.Item`}>
@@ -111,7 +111,7 @@ class Waitlist extends Component {
   }
 }
 
-const style = {
+const listContainerStyles = {
   height: 'calc(75vh - 125px)',
   overflowY: 'auto',
   marginTop: '15px',
