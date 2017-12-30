@@ -148,7 +148,7 @@ export default class AddCar extends Component {
         closeIcon
       >
         <Modal.Header>Add Car</Modal.Header>
-        <Modal.Content form>
+        <Modal.Content>
           <Form
             onSubmit={this.handleSubmit}
             size="small"

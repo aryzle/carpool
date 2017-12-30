@@ -149,7 +149,7 @@ export default class PersonModal extends Component {
         <Modal.Header>
           {person ? 'Edit Person' : 'Join the Carpool!'}
         </Modal.Header>
-        <Modal.Content form>
+        <Modal.Content>
           <Form
             onSubmit={this.handleSubmit}
             size="small"
