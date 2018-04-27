@@ -68,13 +68,7 @@ class Passenger extends Component {
   }
 
   render() {
-    const {
-      connectDragSource,
-      isDragging,
-      inline,
-      eventId,
-      passengerId
-    } = this.props
+    const { connectDragSource, isDragging, inline, eventId } = this.props
     const { passengerData } = this.state
     const { car, name, city, earliestDepartureDateTime, gender } =
       passengerData || {}

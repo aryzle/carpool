@@ -117,9 +117,9 @@ export default class Home extends Component {
 
 const videoStyles = {
   position: 'relative',
-  height: '100%',
+  height: '110vh',
   width: 'auto',
   overflow: 'hidden',
   background: '#000',
-  marginLeft: mql.matches ? '-290px' : ''
+  marginLeft: mql.matches ? '-300px' : ''
 }
