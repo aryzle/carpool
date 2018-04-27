@@ -11,6 +11,9 @@ import adeJPG from '../../static/ade.jpg'
 import defaultUserJPG from '../../static/default-user.jpg'
 import './styles.css'
 
+const { bool, func, string } = PropTypes
+const mql = window.matchMedia('(max-width: 425px)')
+
 const passengerSource = {
   beginDrag(props) {
     return {
@@ -29,12 +32,12 @@ function collect(connect, monitor) {
 
 class Passenger extends Component {
   static propTypes = {
-    passengerId: PropTypes.string,
-    eventId: PropTypes.string,
-    carId: PropTypes.string,
-    inline: PropTypes.bool,
-    connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired
+    passengerId: string,
+    eventId: string,
+    carId: string,
+    inline: bool,
+    connectDragSource: func.isRequired,
+    isDragging: bool.isRequired
   }
 
   state = {
@@ -46,6 +49,7 @@ class Passenger extends Component {
     const personRef = firebase
       .database()
       .ref(`events/${eventId}/persons/${passengerId}`)
+    this.personRef = personRef
 
     personRef.on('value', snap => {
       const passengerData = snap.val()
@@ -59,12 +63,7 @@ class Passenger extends Component {
   }
 
   componentWillUnmount() {
-    const { passengerId, eventId } = this.props
-    const personRef = firebase
-      .database()
-      .ref(`events/${eventId}/persons/${passengerId}`)
-
-    personRef.off()
+    this.personRef.off()
   }
 
   render() {
@@ -78,14 +77,7 @@ class Passenger extends Component {
     if (gender === 'F') imgSrc = adeJPG
 
     return connectDragSource(
-      <div
-        className="PassengerInfo"
-        style={{
-          opacity: isDragging ? 0.5 : 1,
-          display: inline && 'inline-block',
-          cursor: 'move'
-        }}
-      >
+      <div style={passengerInfoStyles(isDragging, inline)}>
         <Popup
           trigger={
             <Label image basic color={car ? 'teal' : 'blue'}>
@@ -113,6 +105,13 @@ class Passenger extends Component {
     )
   }
 }
+
+const passengerInfoStyles = (isDragging, inline) => ({
+  padding: mql.matches ? 0 : '5px',
+  opacity: isDragging ? 0.5 : 1,
+  display: inline && 'inline-block',
+  cursor: 'move'
+})
 
 export default DragSource(ItemTypes.PASSENGER, passengerSource, collect)(
   Passenger

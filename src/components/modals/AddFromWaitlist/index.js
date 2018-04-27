@@ -58,6 +58,7 @@ export default class AddFromWaitlist extends Component {
       .database()
       .ref(`events/${eventId}/persons`)
       .endAt(null)
+    this.personsRef = personsRef
 
     personsRef.on('value', snap => {
       const personData = snap.val() || {}
@@ -73,6 +74,10 @@ export default class AddFromWaitlist extends Component {
       })
       this.setState({ personData, personArr })
     })
+  }
+
+  componentWillUnmount() {
+    this.personsRef.off()
   }
 
   componentWillUpdate() {

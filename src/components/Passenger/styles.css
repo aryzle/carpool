@@ -1,7 +1,3 @@
-.PassengerInfo {
-  padding: 5px;
-}
-
 .ellipsis {
   text-overflow: ellipsis;
   display: inline-block;

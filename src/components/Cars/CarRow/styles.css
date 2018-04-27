@@ -34,8 +34,12 @@
 }
 
 .CarRow-right {
-  padding: 0 20px;
   flex-grow: 4;
+}
+
+.PassengerRow {
+  display: flex;
+  justify-content: space-between;
 }
 
 .ui.icon.small.inverted.attached.no-shadow {

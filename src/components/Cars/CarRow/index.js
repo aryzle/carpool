@@ -75,9 +75,13 @@ class CarRow extends Component {
     isOver: bool.isRequired,
     canDrop: bool.isRequired
   }
-  state = {
-    showConfirm: false
+
+  static initialState = {
+    removingPassengerId: null,
+    showCarDeleteConfirm: false,
+    showPassengerRemoveConfirm: false
   }
+  state = CarRow.initialState
 
   deleteCar = () => {
     const { eventId, car } = this.props
@@ -104,8 +108,39 @@ class CarRow extends Component {
     )
   }
 
-  showConfirm = () => this.setState({ showConfirm: true })
-  handleCancel = () => this.setState({ showConfirm: false })
+  removePassenger = () => {
+    const { eventId, car, departure } = this.props
+    const { removingPassengerId } = this.state
+    const passengerPath = departure ? 'depPassengers' : 'retPassengers'
+    const carPath = departure ? 'depCar' : 'retCar'
+
+    firebase
+      .database()
+      .ref(
+        `/events/${eventId}/cars/${car.id}/${passengerPath}/${removingPassengerId}`
+      ) // remove passenger from car
+      .remove()
+
+    firebase
+      .database()
+      .ref(`/events/${eventId}/persons/${removingPassengerId}/${carPath}`) // remove car from person
+      .remove()
+
+    this.setState(CarRow.initialState)
+  }
+
+  showCarDeleteConfirm = () => this.setState({ showCarDeleteConfirm: true })
+  showPassengerRemoveConfirm = passengerId => () =>
+    this.setState({
+      removingPassengerId: passengerId,
+      showPassengerRemoveConfirm: true
+    })
+  handleCarDeleteCancel = () => this.setState({ showCarDeleteConfirm: false })
+  handlePassengerRemoveCancel = () =>
+    this.setState({
+      removingPassengerId: null,
+      showPassengerRemoveConfirm: false
+    })
 
   renderRiderIcons({ id, seats }, passengers) {
     const { departure, eventId } = this.props
@@ -153,7 +188,7 @@ class CarRow extends Component {
       isOver,
       canDrop
     } = this.props
-    const { showConfirm } = this.state
+    const { showCarDeleteConfirm, showPassengerRemoveConfirm } = this.state
     const {
       depPassengers,
       retPassengers,
@@ -201,12 +236,23 @@ class CarRow extends Component {
         <div className="CarRow-right">
           <p>Passengers</p>
           {Object.keys(passengers).map(passengerId => (
-            <Passenger
-              key={passengerId}
-              passengerId={passengerId}
-              carId={car.id}
-              eventId={eventId}
-            />
+            <div key={passengerId} className="PassengerRow">
+              <Passenger
+                passengerId={passengerId}
+                carId={car.id}
+                eventId={eventId}
+              />
+              {mql.matches && (
+                <Button
+                  icon="delete"
+                  color="yellow"
+                  size={'small'}
+                  className="no-shadow"
+                  onClick={this.showPassengerRemoveConfirm(passengerId)}
+                  inverted
+                />
+              )}
+            </div>
           ))}
         </div>
         <EditCar
@@ -231,15 +277,22 @@ class CarRow extends Component {
           attached="right"
           className="no-shadow"
           style={deleteStyles}
-          onClick={this.showConfirm}
+          onClick={this.showCarDeleteConfirm}
           inverted
         />
         <Confirm
-          open={showConfirm}
+          open={showCarDeleteConfirm}
           content="Are you sure? The driver will also be deleted and all of the passengers will be notified and moved to the Waitlist."
           confirmButton="Delete"
-          onCancel={this.handleCancel}
+          onCancel={this.handleCarDeleteCancel}
           onConfirm={this.deleteCar}
+        />
+        <Confirm
+          open={showPassengerRemoveConfirm}
+          content="Are you sure? The passenger will also be moved to the Waitlist."
+          confirmButton="Remove"
+          onCancel={this.handlePassengerRemoveCancel}
+          onConfirm={this.removePassenger}
         />
       </div>
     )
