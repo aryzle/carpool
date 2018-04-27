@@ -46,11 +46,15 @@ class Passenger extends Component {
     const personRef = firebase
       .database()
       .ref(`events/${eventId}/persons/${passengerId}`)
+
     personRef.on('value', snap => {
       const passengerData = snap.val()
-      this.setState({
-        passengerData
-      })
+      this.setState(
+        {
+          passengerData
+        },
+        () => console.log('Passenger state', this.state)
+      )
     })
   }
 
@@ -59,13 +63,21 @@ class Passenger extends Component {
     const personRef = firebase
       .database()
       .ref(`events/${eventId}/persons/${passengerId}`)
+
     personRef.off()
   }
 
   render() {
-    const { connectDragSource, isDragging, inline, eventId } = this.props
+    const {
+      connectDragSource,
+      isDragging,
+      inline,
+      eventId,
+      passengerId
+    } = this.props
     const { passengerData } = this.state
-    const { car, name, city, earliestDepartureDateTime, gender } = passengerData
+    const { car, name, city, earliestDepartureDateTime, gender } =
+      passengerData || {}
     let imgSrc = defaultUserJPG
 
     if (gender === 'M') imgSrc = chrisJPG

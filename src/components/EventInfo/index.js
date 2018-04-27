@@ -6,9 +6,12 @@ import { Dimmer, Divider, Header, Icon, Loader } from 'semantic-ui-react'
 import moment from 'moment'
 import './styles.css'
 
+const { bool, string } = PropTypes
+
 export default class EventInfo extends Component {
   static propTypes = {
-    eventId: PropTypes.string
+    eventId: string,
+    departure: bool
   }
 
   state = {
@@ -24,8 +27,10 @@ export default class EventInfo extends Component {
       .ref()
       .child('events')
       .child(eventId)
+
     eventRef.on('value', snap => {
       const eventData = snap.val()
+
       if (!eventData) {
         this.setState({ routeTo404: true })
       } else {
@@ -37,6 +42,24 @@ export default class EventInfo extends Component {
         )
       }
     })
+  }
+
+  renderTime() {
+    const { departure } = this.props
+    const { eventData } = this.state
+
+    return departure ? (
+      <Header.Content>
+        {moment(eventData.startDateTime).format('dddd MMMM D, YYYY h:mm A')}
+        <Header.Subheader>
+          - {moment(eventData.endDateTime).format('dddd MMMM D, YYYY h:mm A')}
+        </Header.Subheader>
+      </Header.Content>
+    ) : (
+      <Header.Content>
+        {moment(eventData.endDateTime).format('dddd MMMM D, YYYY h:mm A')}
+      </Header.Content>
+    )
   }
 
   render() {
@@ -67,13 +90,7 @@ export default class EventInfo extends Component {
         </Header>
         <Header as="h3">
           <Icon name="time" />
-          <Header.Content>
-            {moment(eventData.startDateTime).format('dddd MMMM D, YYYY h:mm A')}
-            <Header.Subheader>
-              -{' '}
-              {moment(eventData.endDateTime).format('dddd MMMM D, YYYY h:mm A')}
-            </Header.Subheader>
-          </Header.Content>
+          {this.renderTime()}
         </Header>
       </div>
     )

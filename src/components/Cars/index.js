@@ -6,12 +6,15 @@ import AddCar from '../modals/AddCar'
 import CarRow from './CarRow'
 import './styles.css'
 
+const { bool, string } = PropTypes
 const mql = window.matchMedia('(max-width: 425px)')
 
 export default class Cars extends Component {
   static propTypes = {
-    eventId: PropTypes.string
+    eventId: string,
+    departure: bool
   }
+
   state = {
     carData: {},
     carIds: [],
@@ -31,9 +34,9 @@ export default class Cars extends Component {
       .ref()
       .child('events')
       .child(eventId)
-    const carRef = eventRef.child('cars')
+    const carsRef = eventRef.child('cars')
 
-    carRef.on('value', snap => {
+    carsRef.on('value', snap => {
       const carData = snap.val() || {}
       const carIds = Object.keys(carData)
       this.setState(
@@ -49,7 +52,7 @@ export default class Cars extends Component {
   // media query used here to render components in a certain order
   // needed for mobile vs tablet/desktop
   render() {
-    const { eventId } = this.props
+    const { eventId, departure } = this.props
     const { carIds, carData, filterFull } = this.state
     return (
       <div className="Cars">
@@ -94,7 +97,11 @@ export default class Cars extends Component {
         <div className="Cars-list">
           {carIds.filter(id => filterCars(carData[id], filterFull)).map(id => (
             <Segment key={id} raised>
-              <CarRow car={carData[id]} eventId={eventId} />
+              <CarRow
+                car={carData[id]}
+                eventId={eventId}
+                departure={departure}
+              />
             </Segment>
           ))}
         </div>

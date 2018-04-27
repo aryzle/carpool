@@ -14,22 +14,31 @@ import './styles.css'
 import carSmall from '../../../static/car-small.svg'
 import carMedium from '../../../static/car-medium.svg'
 
+const { bool, func, object, string } = PropTypes
 const mql = window.matchMedia('(max-width: 425px)')
+
 const passengerTarget = {
   canDrop(props, monitor) {
-    const { car: { id: carId, seats, passengers = {} } } = props
+    const {
+      car: { id: carId, seats, depPassengers = {}, retPassengers = {} },
+      departure
+    } = props
     const { carId: oldCarId } = monitor.getItem()
+    const passengers = departure ? depPassengers : retPassengers
 
     return seats > Object.keys(passengers).length && carId !== oldCarId
   },
 
   drop(props, monitor) {
-    const { eventId, car: { id: carId } } = props
+    const { eventId, car: { id: carId }, departure } = props
     const { passengerId, carId: oldCarId } = monitor.getItem('passengerId')
+    const passengerPath = departure ? 'depPassengers' : 'retPassengers'
+    const carPath = departure ? 'depCar' : 'retCar'
+
     if (oldCarId) {
       firebase
         .database()
-        .ref(`events/${eventId}/cars/${oldCarId}/passengers`)
+        .ref(`events/${eventId}/cars/${oldCarId}/${passengerPath}`)
         .update({
           [passengerId]: null
         })
@@ -38,11 +47,11 @@ const passengerTarget = {
       .database()
       .ref(`events/${eventId}/persons/${passengerId}`)
       .update({
-        car: carId
+        [carPath]: carId
       })
     firebase
       .database()
-      .ref(`events/${eventId}/cars/${carId}/passengers`)
+      .ref(`events/${eventId}/cars/${carId}/${passengerPath}`)
       .update({
         [passengerId]: true
       })
@@ -59,11 +68,12 @@ function collect(connect, monitor) {
 
 class CarRow extends Component {
   static propTypes = {
-    eventId: PropTypes.string,
-    car: PropTypes.object,
-    connectDropTarget: PropTypes.func.isRequired,
-    isOver: PropTypes.bool.isRequired,
-    canDrop: PropTypes.bool.isRequired
+    car: object,
+    departure: bool,
+    eventId: string,
+    connectDropTarget: func.isRequired,
+    isOver: bool.isRequired,
+    canDrop: bool.isRequired
   }
   state = {
     showConfirm: false
@@ -71,16 +81,22 @@ class CarRow extends Component {
 
   deleteCar = () => {
     const { eventId, car } = this.props
-    const { passengers = {} } = car
+    const { depPassengers = {}, retPassengers = {} } = car
 
-    Promise.all(
-      Object.keys(passengers).map(id =>
+    Promise.all([
+      ...Object.keys(depPassengers).map(id => {
         firebase
           .database()
-          .ref(`events/${eventId}/persons/${id}/car`)
+          .ref(`events/${eventId}/persons/${id}/depCar`) // remove car from departure passengers
           .remove()
-      )
-    ).then(() =>
+      }),
+      ...Object.keys(retPassengers).map(id => {
+        firebase
+          .database()
+          .ref(`events/${eventId}/persons/${id}/retCar`) // remove car from return passengers
+          .remove()
+      })
+    ]).then(() =>
       firebase
         .database()
         .ref(`/events/${eventId}/cars/${car.id}`)
@@ -91,8 +107,8 @@ class CarRow extends Component {
   showConfirm = () => this.setState({ showConfirm: true })
   handleCancel = () => this.setState({ showConfirm: false })
 
-  renderRiderIcons({ id, passengers = {}, seats }) {
-    const { eventId } = this.props
+  renderRiderIcons({ id, seats }, passengers) {
+    const { departure, eventId } = this.props
     const passengerIds = Object.keys(passengers)
     const seatsLeft = seats - passengerIds.length
     let emptySeats = []
@@ -111,6 +127,7 @@ class CarRow extends Component {
       emptySeats.push(
         <AddFromWaitlist
           key={seatsLeft}
+          departure={departure}
           eventId={eventId}
           trigger={<Icon size="big" color="yellow" name="add user" link />}
           carId={id}
@@ -128,16 +145,25 @@ class CarRow extends Component {
   }
 
   render() {
-    const { eventId, car, connectDropTarget, isOver, canDrop } = this.props
+    const {
+      car,
+      departure,
+      eventId,
+      connectDropTarget,
+      isOver,
+      canDrop
+    } = this.props
     const { showConfirm } = this.state
     const {
-      passengers = {},
+      depPassengers,
+      retPassengers,
       driver,
       departureDateTime,
       returnDateTime,
       label,
       seats
     } = car
+    const passengers = (departure ? depPassengers : retPassengers) || {}
 
     return connectDropTarget(
       <div
@@ -170,7 +196,7 @@ class CarRow extends Component {
             ? `${moment(returnDateTime).format('MMM Do, h:mm a')}`
             : 'open'}`}</p>
           <Driver driverId={driver} eventId={eventId} />
-          {this.renderRiderIcons(car)}
+          {this.renderRiderIcons(car, passengers)}
         </div>
         <div className="CarRow-right">
           <p>Passengers</p>

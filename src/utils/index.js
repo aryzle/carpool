@@ -62,3 +62,11 @@ export const removeFromNormalized = (itemId, normalizedData) => {
 
 export const arrToggleEl = (arr, item) =>
   arr.includes(item) ? without(arr, item) : arr.concat(item)
+
+export const sortByDepartureDateTime = (a, b) => {
+  if (!a.earliestDepartureDateTime) return -1
+  if (!b.earliestDepartureDateTime) return 1
+  if (a.earliestDepartureDateTime < b.earliestDepartureDateTime) return -1
+  if (b.earliestDepartureDateTime < a.earliestDepartureDateTime) return 1
+  return 0
+}

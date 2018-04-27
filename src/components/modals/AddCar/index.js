@@ -51,6 +51,7 @@ export default class AddCar extends Component {
     const newCarId = uuid()
     const departureDateTime = Date.parse(t1) || ''
     const returnDateTime = Date.parse(t2) || ''
+
     firebase
       .database()
       .ref(`events/${eventId}/persons/${newPersonId}`)
@@ -65,7 +66,8 @@ export default class AddCar extends Component {
           'gender',
           'classYear'
         ]),
-        car: newCarId,
+        depCar: newCarId,
+        retCar: newCarId,
         id: newPersonId,
         info: personInfo
       })

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
-import { Container, Menu, Segment } from 'semantic-ui-react'
+import { Checkbox, Container, Menu, Segment } from 'semantic-ui-react'
 import EventInfo from '../../components/EventInfo'
 import Waitlist from '../../components/Waitlist'
 import Cars from '../../components/Cars/index'
@@ -13,8 +13,15 @@ class Event extends Component {
     match: PropTypes.object
   }
 
+  state = {
+    departure: true
+  }
+
+  sliderOnChange = () => this.setState({ departure: !this.state.departure })
+
   render() {
     const { match } = this.props
+    const { departure } = this.state
 
     return (
       <div>
@@ -26,12 +33,16 @@ class Event extends Component {
           </Container>
         </Menu>
         <Container style={{ marginTop: '60px' }}>
-          <EventInfo eventId={match.params.eventId} />
+          departure <Checkbox slider onChange={this.sliderOnChange} /> return
+          <EventInfo eventId={match.params.eventId} departure={departure} />
           <div className="Cars-Waitlist-Container">
-            <Cars eventId={match.params.eventId} />
+            <Cars eventId={match.params.eventId} departure={departure} />
             <div style={waitlistContainerStyle}>
               <Segment raised style={segmentStyle}>
-                <Waitlist eventId={match.params.eventId} />
+                <Waitlist
+                  eventId={match.params.eventId}
+                  departure={departure}
+                />
               </Segment>
             </div>
           </div>

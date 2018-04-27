@@ -5,11 +5,14 @@ import { Button, List, Modal } from 'semantic-ui-react'
 import Passenger from '../../Passenger'
 import { normToArr } from '../../../utils/index'
 
+const { bool, element, string } = PropTypes
+
 export default class AddFromWaitlist extends Component {
   static propTypes = {
-    eventId: PropTypes.string.isRequired,
-    trigger: PropTypes.element.isRequired,
-    carId: PropTypes.string.isRequired
+    departure: bool,
+    eventId: string.isRequired,
+    trigger: element.isRequired,
+    carId: string.isRequired
   }
 
   static initialState = {
@@ -23,18 +26,21 @@ export default class AddFromWaitlist extends Component {
   state = AddFromWaitlist.initialState
 
   handleAdd = personId => () => {
-    const { eventId, carId } = this.props
+    const { eventId, carId, departure } = this.props
+    const passengerPath = departure ? 'depPassengers' : 'retPassengers'
+    const carPath = departure ? 'depCar' : 'retCar'
     this.setState({ loading: true })
+
     firebase
       .database()
       .ref(`events/${eventId}/persons/${personId}`)
       .update({
-        car: carId
+        [carPath]: carId
       })
       .then(() =>
         firebase
           .database()
-          .ref(`events/${eventId}/cars/${carId}/passengers`)
+          .ref(`events/${eventId}/cars/${carId}/${passengerPath}`)
           .update({
             [personId]: true
           })
@@ -51,7 +57,6 @@ export default class AddFromWaitlist extends Component {
     const personsRef = firebase
       .database()
       .ref(`events/${eventId}/persons`)
-      .orderByChild('car')
       .endAt(null)
 
     personsRef.on('value', snap => {
@@ -87,13 +92,8 @@ export default class AddFromWaitlist extends Component {
   }
 
   render() {
-    const { eventId, trigger } = this.props
-    const {
-      personArr
-      // loading,
-      // success,
-      // error
-    } = this.state
+    const { departure, eventId, trigger } = this.props
+    const { personArr } = this.state
 
     return (
       <Modal trigger={trigger} closeIcon>
@@ -101,24 +101,27 @@ export default class AddFromWaitlist extends Component {
         <Modal.Content>
           <div style={listWrapperStyle}>
             <List>
-              {personArr.map(({ id }) => (
-                <List.Item key={`${id}-List.Item`}>
-                  <List.Content>
-                    <Passenger
-                      inline
-                      key={id}
-                      passengerId={id}
-                      eventId={eventId}
-                    />
-                    <Button
-                      icon="add"
-                      color="green"
-                      floated="right"
-                      onClick={this.handleAdd(id)}
-                    />
-                  </List.Content>
-                </List.Item>
-              ))}
+              {personArr
+                .filter(p => (departure ? !p.depCar : !p.retCar))
+                .filter(p => !p.car)
+                .map(({ id }) => (
+                  <List.Item key={`${id}-List.Item`}>
+                    <List.Content>
+                      <Passenger
+                        inline
+                        key={id}
+                        passengerId={id}
+                        eventId={eventId}
+                      />
+                      <Button
+                        icon="add"
+                        color="green"
+                        floated="right"
+                        onClick={this.handleAdd(id)}
+                      />
+                    </List.Content>
+                  </List.Item>
+                ))}
             </List>
           </div>
         </Modal.Content>

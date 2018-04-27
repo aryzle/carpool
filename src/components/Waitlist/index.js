@@ -5,24 +5,28 @@ import firebase from 'firebase'
 import { Header, List } from 'semantic-ui-react'
 import PersonModal from '../modals/Person'
 import Passenger from '../Passenger'
-import { normToArr } from '../../utils/index'
+import { normToArr, sortByDepartureDateTime } from '../../utils/index'
 import { ItemTypes } from '../../Constants'
 import './styles.css'
 
+const { bool, func, string } = PropTypes
+
 const passengerTarget = {
   drop(props, monitor) {
-    const { eventId } = props
+    const { eventId, departure } = props
     const { passengerId, carId } = monitor.getItem()
+    const passengerPath = departure ? 'depPassengers' : 'retPassengers'
+    const carPath = departure ? 'depCar' : 'retCar'
 
     firebase
       .database()
       .ref(`events/${eventId}/persons/${passengerId}`)
       .update({
-        car: null
+        [carPath]: null
       })
     firebase
       .database()
-      .ref(`events/${eventId}/cars/${carId}/passengers`)
+      .ref(`events/${eventId}/cars/${carId}/${passengerPath}`)
       .update({
         [passengerId]: null
       })
@@ -38,9 +42,10 @@ function collect(connect, monitor) {
 
 class Waitlist extends Component {
   static propTypes = {
-    eventId: PropTypes.string,
-    connectDropTarget: PropTypes.func.isRequired,
-    isOver: PropTypes.bool.isRequired
+    departure: bool,
+    eventId: string,
+    connectDropTarget: func.isRequired,
+    isOver: bool.isRequired
   }
   state = {
     personData: {},
@@ -49,24 +54,15 @@ class Waitlist extends Component {
 
   componentDidMount() {
     const { eventId } = this.props
-    const personsRef = firebase
-      .database()
-      .ref(`events/${eventId}/persons`)
-      .orderByChild('car')
-      .endAt(null)
+    const personsRef = firebase.database().ref(`events/${eventId}/persons`)
 
     personsRef.on('value', snap => {
       const personData = snap.val() || {}
       const personArr = normToArr({
         ids: Object.keys(personData),
         data: personData
-      }).sort((a, b) => {
-        if (!a.earliestDepartureDateTime) return -1
-        if (!b.earliestDepartureDateTime) return 1
-        if (a.earliestDepartureDateTime < b.earliestDepartureDateTime) return -1
-        if (b.earliestDepartureDateTime < a.earliestDepartureDateTime) return 1
-        return 0
-      })
+      }).sort(sortByDepartureDateTime)
+
       this.setState(
         {
           personData,
@@ -78,7 +74,7 @@ class Waitlist extends Component {
   }
 
   render() {
-    const { eventId, connectDropTarget, isOver } = this.props
+    const { departure, eventId, connectDropTarget, isOver } = this.props
     const { personArr } = this.state
 
     return connectDropTarget(
@@ -89,21 +85,24 @@ class Waitlist extends Component {
         }}
       >
         <Header as="h2">Waitlist</Header>
-        <PersonModal eventId={eventId} />
+        <PersonModal eventId={eventId} departure={departure} />
         <div style={listContainerStyles}>
           <List>
-            {personArr.map(({ id }) => (
-              <List.Item key={`${id}-List.Item`}>
-                <List.Content>
-                  <Passenger
-                    inline
-                    key={id}
-                    passengerId={id}
-                    eventId={eventId}
-                  />
-                </List.Content>
-              </List.Item>
-            ))}
+            {personArr
+              .filter(p => (departure ? !p.depCar : !p.retCar))
+              .filter(p => !p.car)
+              .map(({ id }) => (
+                <List.Item key={`${id}-List.Item`}>
+                  <List.Content>
+                    <Passenger
+                      inline
+                      key={id}
+                      passengerId={id}
+                      eventId={eventId}
+                    />
+                  </List.Content>
+                </List.Item>
+              ))}
           </List>
         </div>
       </div>

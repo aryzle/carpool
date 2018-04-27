@@ -7,12 +7,15 @@ import moment from 'moment'
 import uuid from 'uuid/v4'
 import { classOptions, genderOptions } from '../shared'
 
+const { bool, element, object, string } = PropTypes
+
 export default class PersonModal extends Component {
   static propTypes = {
-    eventId: PropTypes.string,
-    trigger: PropTypes.element,
-    carId: PropTypes.string,
-    person: PropTypes.object
+    departure: bool,
+    eventId: string,
+    trigger: element,
+    carId: string,
+    person: object
   }
 
   static initialState = {
@@ -37,13 +40,18 @@ export default class PersonModal extends Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
-    const { eventId, carId, person = {} } = this.props
     this.setState({ loading: true })
+
+    const { departure, eventId, carId, person = {} } = this.props
+    const isEdit = !!person.id
     const personId = person.id || uuid()
     const earliestDepartureDateTime =
       Date.parse(this.state.earliestDepartureDateTime) || ''
     const latestReturnDateTime =
       Date.parse(this.state.latestReturnDateTime) || ''
+    const passengerPath = departure ? 'depPassengers' : 'retPassengers'
+    const carPath = departure ? 'depCar' : 'retCar'
+
     firebase
       .database()
       .ref(`events/${eventId}/persons/${personId}`)
@@ -56,7 +64,7 @@ export default class PersonModal extends Component {
           'error'
         ]),
         id: personId,
-        car: carId || null,
+        [carPath]: carId || null,
         earliestDepartureDateTime,
         latestReturnDateTime
       })
@@ -64,17 +72,23 @@ export default class PersonModal extends Component {
         if (carId) {
           return firebase
             .database()
-            .ref(`events/${eventId}/cars/${carId}/passengers`)
+            .ref(`events/${eventId}/cars/${carId}/${passengerPath}`)
             .update({
               [personId]: true
             })
         }
       })
       .then(() => {
-        this.setState({
-          ...PersonModal.initialState,
-          success: true
-        })
+        isEdit
+          ? this.setState({
+              success: true,
+              loading: false
+            })
+          : this.setState({
+              ...PersonModal.initialState,
+              success: true
+            })
+
         setTimeout(() => this.setState({ success: false }), 3000)
       })
       .catch(e => {
